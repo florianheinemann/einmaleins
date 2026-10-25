@@ -203,6 +203,28 @@ details.parents li{color:var(--paper)}
 .result-actions{display:flex;flex-wrap:wrap;gap:12px}
 .result-actions > *{flex:1 1 180px}
 
+/* ---------- grandmaster (all 30 shuriken, kept for good) ---------- */
+.ninja .crown{display:none}
+body.master .ninja .crown{display:inline}
+body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
+.master-badge{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:linear-gradient(135deg,#3b3014,var(--night-2) 70%);border:2px solid #ffd84a;border-radius:16px;padding:10px 14px;font-weight:800;color:#ffe9a0;box-shadow:0 0 24px rgba(255,216,74,.22)}
+.master-badge svg{width:30px;height:30px;flex:none}
+.master-badge small{display:block;font-weight:700;color:var(--mist);font-size:.82rem}
+.finale{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.finale h2{font-family:var(--f-display);font-size:clamp(2.2rem,10vw,3.2rem);line-height:1;margin:0;color:#ffd84a;text-shadow:0 0 24px rgba(255,216,74,.45)}
+.finale p{margin:0;font-weight:700;color:var(--mist);max-width:36ch}
+.finale .moon{width:190px;height:190px;border:none;padding:0;cursor:pointer}
+.finale .moon .ninja{width:140px}
+.cert{background:var(--paper);color:var(--ink);border-radius:18px;padding:20px 18px 18px;text-align:center;border:4px double #c9a21f;box-shadow:0 8px 0 var(--paper-2);display:flex;flex-direction:column;gap:6px}
+.cert .label{color:#8a7f66}
+.cert h3{font-family:var(--f-display);font-size:1.45rem;line-height:1.15;margin:0;text-wrap:balance}
+.cert p{margin:0;font-weight:700}
+.cert input{font:inherit;font-family:var(--f-display);font-size:1.4rem;text-align:center;color:var(--ink);background:transparent;border:none;border-bottom:2px dashed #b9ad92;padding:4px;margin:4px auto;width:min(100%,280px);user-select:text;-webkit-user-select:text}
+.cert input:focus{outline:none;border-bottom-color:#c9a21f}
+.cert .date{color:#6b6250;font-size:.9rem}
+.fx{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:60}
+.app-footer{margin:8px 0 0;text-align:center;color:var(--dim);font-size:.75rem;font-weight:700;letter-spacing:.04em}
+
 @media (max-width:420px){
   .hero{grid-template-columns:120px 1fr}
   .moon{width:120px;height:120px}
@@ -227,6 +249,11 @@ details.parents li{color:var(--paper)}
       <h1 class="brand"><small>Kleines Einmaleins</small>Einmaleins-Dojo</h1>
       <button type="button" class="icon-btn sound-btn" aria-label="Ton an oder aus"></button>
     </div>
+
+    <button type="button" class="master-badge" id="masterBadge" hidden>
+      <span class="crown-ico"></span>
+      <span>Goldener Gürtel · Großmeister<small id="masterSince"></small></span>
+    </button>
 
     <div class="hero">
       <div class="moon"><div class="ninja" id="ninjaBig"></div></div>
@@ -261,6 +288,7 @@ details.parents li{color:var(--paper)}
         <li>Eine falsch gelöste Aufgabe kommt zwei, drei Aufgaben später als „Comeback-Chance“ zurück. Trifft er sie dann, zählt das als Comeback. So wird aus dem Fehler ein Erfolg, den er sieht.</li>
         <li>Aufgaben, die noch nicht sitzen, kommen häufiger dran. Tauschaufgaben wie 3 · 7 und 7 · 3 zählen als eine.</li>
         <li>Shuriken (bis zu 3 pro Reihe) zeigen, wie sicher eine Reihe sitzt. Sie wachsen bei Treffern im ersten Versuch. Genug Shuriken bringen den nächsten Gürtel.</li>
+        <li>Mit allen 30 Shuriken gibt es den goldenen Gürtel und eine Großmeister-Urkunde. Der bleibt für immer, auch wenn später mal ein Shuriken verloren geht. Nur „Fortschritt zurücksetzen“ löscht ihn.</li>
         <li>Bewährte Reihenfolge: 2, 5, 10, dann 4 und 3, dann 9, zum Schluss 6, 8 und 7.</li>
         <li>Der Fortschritt bleibt in diesem Browser auf diesem Gerät gespeichert.</li>
       </ul>
@@ -331,6 +359,29 @@ details.parents li{color:var(--paper)}
       <button type="button" class="btn-ghost" id="homeBtn">Zum Dojo</button>
     </div>
   </section>
+
+  <!-- ============ GROSSMEISTER ============ -->
+  <section class="screen" id="master" hidden>
+    <div class="finale">
+      <p class="label">Alle 30 Shuriken</p>
+      <h2>Großmeister!</h2>
+      <button type="button" class="moon" id="masterMoon" aria-label="Feuerwerk"><span class="ninja" id="ninjaMaster"></span></button>
+      <p>Du kannst das ganze kleine Einmaleins. Jede Reihe, jede Aufgabe. Den goldenen Gürtel behältst du für immer.</p>
+    </div>
+    <div class="cert">
+      <p class="label">Urkunde</p>
+      <h3>Großmeister des Einmaleins</h3>
+      <input id="masterName" maxlength="24" placeholder="Dein Name" aria-label="Dein Name" autocomplete="off">
+      <p>trägt den goldenen Gürtel des Einmaleins-Dojos.</p>
+      <p class="date" id="masterDate"></p>
+    </div>
+    <p class="hint-txt" style="margin:0;text-align:center;color:var(--mist);font-weight:700">Tipp auf den Mond für noch ein Feuerwerk!</p>
+    <div class="result-actions">
+      <button type="button" class="btn-main" id="masterHome">Zum Dojo</button>
+    </div>
+  </section>
+
+  <p class="app-footer" id="appVersion"></p>
 </div>
 
 <script>
@@ -347,6 +398,10 @@ details.parents li{color:var(--paper)}
   let selected = store.get('dojo.sel', [2,5,10]);
   if (!Array.isArray(selected) || !selected.length) selected = [2,5,10];
   let muted = !!store.get('dojo.muted', false);
+  let master = store.get('dojo.master', null);   // {date, name}: set once all 30 shuriken are reached, never lost by mistakes
+
+  const VERSION = '1.2.0';
+  $('#appVersion').textContent = `Einmaleins-Dojo · Version ${VERSION}`;
 
   const BELTS = [
     {min:0,  name:'Weißer',    dat:'weißen',    color:'#f5f3ea', edge:'#bdb8a6'},
@@ -356,7 +411,9 @@ details.parents li{color:var(--paper)}
     {min:17, name:'Blauer',    dat:'blauen',    color:'#4f8dff', edge:'#2c5fc0'},
     {min:22, name:'Brauner',   dat:'braunen',   color:'#9a6440', edge:'#6b4027'},
     {min:27, name:'Schwarzer', dat:'schwarzen', color:'#121214', edge:'#e9e1cc'},
+    {min:30, name:'Goldener',  dat:'goldenen',  color:'#e8b923', edge:'#fff1a8'},
   ];
+  const GOLD = BELTS[BELTS.length-1];
 
   /* ---------- svg bits ---------- */
   const SHU = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4 Z"/><circle cx="12" cy="12" r="2.4" fill="var(--night)"/></svg>';
@@ -373,6 +430,7 @@ details.parents li{color:var(--paper)}
     <path d="M48 89 L42 103 L47 102 Z M52 89 L58 103 L53 102 Z" fill="var(--belt)" stroke="var(--belt-edge)" stroke-width="1.2" stroke-linejoin="round"/>
     <rect x="44.5" y="81.5" width="11" height="11" rx="3" fill="var(--belt)" stroke="var(--belt-edge)" stroke-width="1.5"/>
     <circle cx="50" cy="40" r="28" fill="var(--suit)" stroke="var(--suit-edge)" stroke-width="2"/>
+    <path class="crown" d="M35 16 L37 3 L44 10 L50 0 L56 10 L63 3 L65 16 Z" fill="#ffd84a" stroke="#c9a21f" stroke-width="1.5" stroke-linejoin="round"/>
     <rect x="29" y="21" width="42" height="7" rx="3.5" fill="var(--band)"/>
     <rect x="27" y="33" width="46" height="17" rx="8.5" fill="var(--skin)"/>
     <ellipse class="eye" cx="41" cy="41.5" rx="3.4" ry="4.3" fill="#1c1a2b"/>
@@ -404,7 +462,9 @@ details.parents li{color:var(--paper)}
     ok(){ tone(660,0,.16); tone(990,.08,.24); },
     hit(){ tone(1320,0,.35,'sine',.07); tone(1760,.05,.3,'sine',.04); },
     soft(){ tone(392,0,.2,'sine',.09); tone(330,.1,.26,'sine',.07); },
-    win(){ [523,659,784,1046].forEach((f,i)=>tone(f,i*.12,.32)); }
+    win(){ [523,659,784,1046].forEach((f,i)=>tone(f,i*.12,.32)); },
+    fanfare(){ [523,659,784,1046,784,1046,1318].forEach((f,i)=>tone(f,i*.14,i===6?.9:.3,'triangle',.11)); },
+    boom(){ tone(140+Math.random()*60,0,.3,'sine',.08); tone(1800+Math.random()*900,.04,.35,'sine',.025); }
   };
   const SPK_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
   const SPK_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';
@@ -418,8 +478,11 @@ details.parents li{color:var(--paper)}
   const setLvl = (key, v) => { levels[key] = Math.max(0, Math.min(3, v)); store.set('dojo.levels', levels); };
   function starsFor(r){ let s = 0; for (let k=1;k<=10;k++) s += lvl(r,k); return Math.min(3, Math.floor(s/9)); }
   function totalStars(){ let t = 0; for (let r=1;r<=10;r++) t += starsFor(r); return t; }
-  function beltFor(t){ let b = BELTS[0]; for (const x of BELTS) if (t >= x.min) b = x; return b; }
-  function applyBelt(b){ const s = document.documentElement.style; s.setProperty('--belt', b.color); s.setProperty('--belt-edge', b.edge); }
+  function beltFor(t){ if (master) return GOLD; let b = BELTS[0]; for (const x of BELTS) if (t >= x.min) b = x; return b; }
+  function applyBelt(b){
+    const s = document.documentElement.style; s.setProperty('--belt', b.color); s.setProperty('--belt-edge', b.edge);
+    document.body.classList.toggle('master', !!master);
+  }
 
   const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
   const pickOne = a => a[Math.floor(Math.random()*a.length)];
@@ -490,7 +553,7 @@ details.parents li{color:var(--paper)}
     return out.map(c => makeItem(c.r, c.k, true));
   }
 
-  function show(id){ ['dojo','game','result'].forEach(s => $('#'+s).hidden = s !== id); window.scrollTo(0,0); }
+  function show(id){ ['dojo','game','result','master'].forEach(s => $('#'+s).hidden = s !== id); window.scrollTo(0,0); }
 
   function renderLanterns(el, lit, popIdx=-1){
     el.innerHTML = '';
@@ -648,7 +711,10 @@ details.parents li{color:var(--paper)}
   }
 
   function finish(){
-    const total = totalStars(), after = beltFor(total);
+    const total = totalStars();
+    const newMaster = !master && total >= GOLD.min;
+    if (newMaster){ master = { date: new Date().toISOString(), name: '' }; store.set('dojo.master', master); }
+    const after = beltFor(total);
     $('#sPts').textContent = round.points;
     $('#sClean').textContent = round.clean;
     $('#sCome').textContent = round.comebacks;
@@ -670,8 +736,66 @@ details.parents li{color:var(--paper)}
     const up = after.min > round.beltBefore.min;
     $('#beltUp').hidden = !up;
     if (up) $('#beltUpTitle').textContent = `Neuer Gürtel: ${after.name} Gürtel!`;
+    if (newMaster){ showMaster(); return; }
     show('result');
     sfx.win();
+  }
+
+  /* ---------- grandmaster ---------- */
+  const CROWN = '<svg viewBox="0 0 30 24" aria-hidden="true"><path d="M2 21 L4 5 L10 12 L15 2 L20 12 L26 5 L28 21 Z" fill="#ffd84a" stroke="#c9a21f" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+  $$('.crown-ico').forEach(n => n.innerHTML = CROWN);
+  const fmtDate = iso => new Date(iso).toLocaleDateString('de-DE', { day:'numeric', month:'long', year:'numeric' });
+
+  function showMaster(){
+    $('#masterDate').textContent = `Erreicht am ${fmtDate(master.date)}`;
+    $('#masterName').value = master.name || '';
+    show('master');
+    sfx.fanfare();
+    fireworks(5000);
+  }
+  $('#masterName').addEventListener('input', e => { master.name = e.target.value.trim(); store.set('dojo.master', master); });
+  $('#masterMoon').addEventListener('click', () => {
+    const n = $('#ninjaMaster'); n.classList.remove('hop'); void n.offsetWidth; n.classList.add('hop');
+    fireworks(2500);
+  });
+  $('#masterHome').addEventListener('click', () => { renderDojo(); show('dojo'); });
+  $('#masterBadge').addEventListener('click', showMaster);
+
+  function fireworks(ms){
+    if (reduce) return;
+    const c = document.createElement('canvas'); c.className = 'fx'; document.body.appendChild(c);
+    const dpr = Math.min(2, devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+    c.width = W*dpr; c.height = H*dpr;
+    const x = c.getContext('2d'); x.scale(dpr, dpr);
+    const COLS = ['#ffb24a','#ffd84a','#6fd0a0','#4f8dff','#ff9a3c','#f5eddc','#e8b923'];
+    const parts = [], t0 = performance.now(); let next = 0;
+    function burst(){
+      const cx = W*(.15 + Math.random()*.7), cy = H*(.12 + Math.random()*.4), col = pickOne(COLS), n = 44;
+      for (let i=0;i<n;i++){
+        const a = Math.PI*2*i/n, v = 2 + Math.random()*3.5;
+        parts.push({ x:cx, y:cy, vx:Math.cos(a)*v, vy:Math.sin(a)*v, life:1, rot:Math.random()*6,
+          col: Math.random() < .3 ? pickOne(COLS) : col, shu: Math.random() < .2 });
+      }
+      sfx.boom();
+    }
+    function frame(now){
+      const el = now - t0;
+      if (el < ms && now >= next){ burst(); next = now + 300 + Math.random()*400; }
+      x.clearRect(0,0,W,H);
+      for (let i=parts.length-1;i>=0;i--){
+        const p = parts[i];
+        p.vy += .06; p.vx *= .985; p.vy *= .985; p.x += p.vx; p.y += p.vy; p.life -= .012; p.rot += .25;
+        if (p.life <= 0){ parts.splice(i,1); continue; }
+        x.globalAlpha = p.life; x.fillStyle = p.col;
+        if (p.shu){
+          x.save(); x.translate(p.x,p.y); x.rotate(p.rot); x.beginPath();
+          for (let k=0;k<8;k++){ const r = k%2 ? 2 : 7, a = k*Math.PI/4; x.lineTo(Math.cos(a)*r, Math.sin(a)*r); }
+          x.closePath(); x.fill(); x.restore();
+        } else { x.beginPath(); x.arc(p.x,p.y,2.4,0,Math.PI*2); x.fill(); }
+      }
+      if (el < ms || parts.length) requestAnimationFrame(frame); else c.remove();
+    }
+    requestAnimationFrame(frame);
   }
 
   /* ---------- dojo ---------- */
@@ -693,13 +817,15 @@ details.parents li{color:var(--paper)}
   function renderDojo(){
     const total = totalStars(), b = beltFor(total); applyBelt(b);
     $('#beltName').textContent = b.name + ' Gürtel';
+    $('#masterBadge').hidden = !master;
+    if (master) $('#masterSince').textContent = `seit ${fmtDate(master.date)}${master.name ? ' · ' + master.name : ''} · Urkunde ansehen`;
     const ni = BELTS.indexOf(b) + 1;
     if (ni < BELTS.length){
       const nb = BELTS[ni], need = nb.min - total;
       $('#beltNext').textContent = `Noch ${need} Shuriken bis zum ${nb.dat} Gürtel`;
       $('#beltFill').style.width = ((total - b.min) / (nb.min - b.min) * 100) + '%';
     } else {
-      $('#beltNext').textContent = 'Meister-Ninja! Alle Reihen sitzen.';
+      $('#beltNext').textContent = 'Großmeister! Das ganze Einmaleins sitzt.';
       $('#beltFill').style.width = '100%';
     }
     $$('.tile').forEach(t => {
@@ -723,10 +849,10 @@ details.parents li{color:var(--paper)}
   function renderReset(confirming){
     const row = $('#resetRow');
     row.innerHTML = confirming
-      ? '<span style="font-weight:700">Wirklich alle Shuriken und Gürtel löschen?</span><button type="button" class="danger" id="resetYes">Ja, löschen</button><button type="button" id="resetNo">Abbrechen</button>'
+      ? '<span style="font-weight:700">Wirklich alle Shuriken und Gürtel löschen' + (master ? ', auch den goldenen' : '') + '?</span><button type="button" class="danger" id="resetYes">Ja, löschen</button><button type="button" id="resetNo">Abbrechen</button>'
       : '<button type="button" id="resetAsk">Fortschritt zurücksetzen</button>';
     if (confirming){
-      $('#resetYes').addEventListener('click', () => { levels = {}; store.set('dojo.levels', levels); renderDojo(); renderReset(false); });
+      $('#resetYes').addEventListener('click', () => { levels = {}; store.set('dojo.levels', levels); master = null; store.set('dojo.master', null); renderDojo(); renderReset(false); });
       $('#resetNo').addEventListener('click', () => renderReset(false));
     } else {
       $('#resetAsk').addEventListener('click', () => renderReset(true));
