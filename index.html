@@ -1,0 +1,725 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Einmaleins-Dojo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
+<style>
+/* Layout: one centered column (max 560px). Three screens swap in place: Dojo → Training → Ergebnis. A single night-sky world, deliberately one theme. */
+:root{
+  --night:#161a35; --night-2:#21264d; --night-3:#2d3366; --line:#414884;
+  --paper:#f5eddc; --paper-2:#d8cdb3; --ink:#1c1a2b; --moon:#efe2c2;
+  --lantern:#ffb24a; --lantern-deep:#c97a1c; --lantern-soft:rgba(255,178,74,.30);
+  --bamboo:#6fd0a0; --bamboo-deep:#3d9a6c; --mist:#b3b8e6; --dim:#7a80b8;
+  --suit:#2f3568; --suit-edge:#8d95e6; --skin:#f3cfa7; --band:#ffb24a; --cap:#5b3b22;
+  --belt:#f5f3ea; --belt-edge:#bdb8a6;
+  --f-display:"Dela Gothic One","Arial Black",Impact,system-ui,sans-serif;
+  --f-body:"M PLUS Rounded 1c","Nunito","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  background-color:var(--night);
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%,rgba(245,237,220,.55),transparent 60%),
+    radial-gradient(1px 1px at 78% 9%,rgba(245,237,220,.5),transparent 60%),
+    radial-gradient(1.5px 1.5px at 64% 32%,rgba(245,237,220,.35),transparent 60%),
+    radial-gradient(1px 1px at 30% 44%,rgba(245,237,220,.4),transparent 60%),
+    radial-gradient(1px 1px at 90% 58%,rgba(245,237,220,.35),transparent 60%),
+    radial-gradient(1.5px 1.5px at 6% 72%,rgba(245,237,220,.3),transparent 60%),
+    radial-gradient(120% 60% at 50% 110%,#22285a 0%,transparent 70%);
+  background-attachment:fixed;
+  color:var(--paper);
+  font-family:var(--f-body);font-weight:500;font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--lantern);outline-offset:3px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.screen{display:flex;flex-direction:column;gap:20px}
+
+/* ---------- shared ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:var(--f-display);font-size:1.35rem;letter-spacing:.01em;margin:0;line-height:1.1}
+.brand small{display:block;font-family:var(--f-body);font-weight:700;font-size:.78rem;color:var(--mist);letter-spacing:.08em;text-transform:uppercase}
+.icon-btn{display:inline-flex;align-items:center;gap:6px;background:var(--night-2);border:2px solid var(--line);border-radius:12px;padding:8px 12px;font-weight:700;font-size:.9rem;color:var(--mist)}
+.icon-btn svg{width:20px;height:20px;flex:none}
+.btn-main{
+  font-family:var(--f-display);font-size:1.45rem;color:var(--ink);
+  background:var(--lantern);border:none;border-radius:18px;padding:16px 26px;
+  box-shadow:0 6px 0 var(--lantern-deep);transition:transform .08s, box-shadow .08s;
+}
+.btn-main:active{transform:translateY(4px);box-shadow:0 2px 0 var(--lantern-deep)}
+.btn-main:disabled{background:var(--night-3);color:var(--dim);box-shadow:0 6px 0 #1c2045;cursor:not-allowed}
+.btn-ghost{font-family:var(--f-display);font-size:1.15rem;background:transparent;border:2px solid var(--line);border-radius:18px;padding:14px 22px;color:var(--paper)}
+.label{font-weight:800;font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--mist);margin:0}
+
+/* ---------- ninja ---------- */
+.ninja-svg{display:block;width:100%;height:auto;overflow:visible}
+.ninja .eye{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.ninja.hop{animation:hop .45s ease}
+@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-12px) rotate(-4deg)}}
+.ninja.think{animation:think .6s ease}
+@keyframes think{0%,100%{transform:rotate(0)}30%{transform:rotate(-7deg)}65%{transform:rotate(5deg)}}
+
+/* ---------- dojo ---------- */
+.hero{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center}
+.moon{position:relative;width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle at 38% 35%,var(--moon) 0%,#e2d2ab 60%,#cdbb90 100%);
+  box-shadow:0 0 50px rgba(239,226,194,.25)}
+.moon .ninja{position:absolute;left:50%;bottom:-6px;width:112px;transform:translateX(-50%)}
+.moon .ninja.hop{animation:none}
+.belt-card{display:flex;flex-direction:column;gap:8px;min-width:0}
+.belt-name{font-family:var(--f-display);font-size:1.6rem;line-height:1.15;margin:0;text-wrap:balance}
+.belt-swatch{display:inline-block;width:34px;height:12px;border-radius:4px;background:var(--belt);border:2px solid var(--belt-edge);vertical-align:middle;margin-right:8px;position:relative;top:-3px}
+.track{height:12px;border-radius:99px;background:var(--night-3);overflow:hidden}
+.track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--lantern-deep),var(--lantern));border-radius:99px;transition:width .6s ease}
+.belt-next{margin:0;color:var(--mist);font-weight:700;font-size:.92rem}
+
+.tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--night-2);border:2px solid var(--line);border-radius:14px;padding:10px 2px 8px;transition:background .15s,transform .1s}
+.tile:active{transform:scale(.96)}
+.tile .n{font-family:var(--f-display);font-size:1.7rem;line-height:1}
+.tile .er{font-weight:800;font-size:.72rem;color:var(--mist);letter-spacing:.04em}
+.tile .stars{display:flex;gap:2px}
+.tile .stars svg{width:13px;height:13px;color:var(--night-3)}
+.tile .stars svg.on{color:var(--lantern)}
+.tile[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--lantern);box-shadow:0 0 0 3px var(--lantern-soft)}
+.tile[aria-pressed="true"] .er{color:#6b6250}
+.tile[aria-pressed="true"] .stars svg{color:var(--paper-2)}
+.tile[aria-pressed="true"] .stars svg.on{color:var(--lantern-deep)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:transparent;border:2px solid var(--line);border-radius:99px;padding:6px 14px;font-weight:700;font-size:.9rem;color:var(--mist)}
+.chip:active{background:var(--night-2)}
+.start-row{display:flex;flex-direction:column;align-items:stretch;gap:8px}
+.start-row .hint-txt{margin:0;text-align:center;color:var(--mist);font-size:.9rem;font-weight:700}
+
+details.parents{background:var(--night-2);border:2px solid var(--line);border-radius:16px;padding:12px 16px}
+details.parents summary{font-weight:800;cursor:pointer;color:var(--mist);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px}
+details.parents summary::-webkit-details-marker{display:none}
+details.parents summary::after{content:"+";font-family:var(--f-display);font-size:1.2rem}
+details.parents[open] summary::after{content:"–"}
+details.parents ul{margin:12px 0 4px;padding-left:20px;display:flex;flex-direction:column;gap:8px;max-width:65ch}
+details.parents li{color:var(--paper)}
+.reset-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.reset-row button{background:transparent;border:2px solid var(--line);border-radius:10px;padding:6px 12px;font-weight:700;font-size:.85rem;color:var(--mist)}
+.reset-row .danger{border-color:var(--lantern);color:var(--lantern)}
+
+/* ---------- training ---------- */
+.lanterns{position:relative;display:flex;justify-content:space-between;padding:0 4px}
+.lanterns::before{content:"";position:absolute;left:0;right:0;top:2px;height:8px;border-top:2px solid var(--line);border-radius:50%}
+.lantern{width:26px;flex:none;position:relative}
+.lantern svg{display:block;width:100%;height:auto}
+.lantern .lb{fill:var(--night-3);transition:fill .25s}
+.lantern .tassel{stroke:var(--line)}
+.lantern.lit .lb{fill:var(--lantern)}
+.lantern.lit .tassel{stroke:var(--lantern)}
+.lantern.lit svg{filter:drop-shadow(0 0 7px var(--lantern))}
+.lantern.pop{animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.35) rotate(6deg)}100%{transform:scale(1)}}
+.lantern:nth-child(odd){margin-top:3px}
+
+.points{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-display);font-size:1.15rem;font-variant-numeric:tabular-nums}
+.points svg{width:20px;height:20px;color:var(--lantern)}
+
+.say{display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:end}
+.say .ninja{width:76px}
+.bubble{position:relative;background:var(--night-2);border:2px solid var(--line);border-radius:16px;padding:10px 14px;min-height:52px;font-weight:800;font-size:1.08rem;display:flex;align-items:center;margin-bottom:14px}
+.bubble::before{content:"";position:absolute;left:-9px;bottom:14px;width:14px;height:14px;background:var(--night-2);border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+
+.card{position:relative;background:var(--paper);color:var(--ink);border-radius:22px;padding:30px 16px 24px;box-shadow:0 8px 0 var(--paper-2)}
+.eq{display:flex;justify-content:center;align-items:center;gap:.22em;white-space:nowrap;font-family:var(--f-display);font-size:clamp(2rem,8.5vw,3.4rem);line-height:1;font-variant-numeric:tabular-nums}
+.eq .op{color:#8a7f66}
+.slot{display:inline-flex;justify-content:center;align-items:center;min-width:1.7em;height:1.35em;border:4px dashed #b9ad92;border-radius:14px;color:#b9ad92}
+.slot.filled{border:4px solid var(--bamboo-deep);background:var(--bamboo);color:var(--ink)}
+.tag{position:absolute;top:10px;left:12px;background:var(--ink);color:var(--lantern);font-weight:800;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:99px}
+
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ans{min-height:88px;background:var(--paper);color:var(--ink);border:3px solid transparent;border-radius:18px;font-family:var(--f-display);font-size:clamp(1.9rem,8vw,2.6rem);font-variant-numeric:tabular-nums;box-shadow:0 6px 0 var(--paper-2);transition:transform .08s,box-shadow .08s,background .2s}
+.ans:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 var(--paper-2)}
+.ans.tried{background:var(--night-2);color:var(--dim);border:3px dashed var(--line);box-shadow:none;cursor:default}
+.ans.right{background:var(--bamboo);border-color:var(--bamboo-deep);box-shadow:0 6px 0 var(--bamboo-deep)}
+.ans.reveal{border-color:var(--lantern);animation:glow 1.1s ease-in-out infinite}
+.ans.wobble{animation:wobble .4s ease}
+@keyframes glow{0%,100%{box-shadow:0 6px 0 var(--paper-2),0 0 0 0 var(--lantern-soft)}50%{box-shadow:0 6px 0 var(--paper-2),0 0 0 9px var(--lantern-soft)}}
+@keyframes wobble{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.ans:disabled:not(.tried):not(.right){opacity:.55;cursor:default}
+
+.trick-btn{align-self:center;display:inline-flex;align-items:center;gap:8px;background:transparent;border:2px solid var(--line);border-radius:99px;padding:8px 18px;font-weight:800;color:var(--mist)}
+.trick-btn svg{width:18px;height:18px;color:var(--lantern)}
+.hint{background:var(--night-2);border:2px solid var(--line);border-radius:18px;padding:14px 14px 16px;display:flex;flex-direction:column;gap:12px}
+.hint .trick{margin:0;font-weight:800;font-size:1.1rem;line-height:1.4}
+.hint .sub{margin:0;color:var(--mist);font-weight:700;font-size:.9rem}
+.grid{display:flex;flex-direction:column;gap:3px;overflow-x:auto;padding-bottom:2px}
+.grid .row{display:flex;align-items:center;gap:3px}
+.grid .row:nth-child(5){margin-bottom:7px}
+.grid .dot{width:var(--d,16px);height:var(--d,16px);border-radius:50%;background:var(--lantern);flex:none}
+.grid .dot.b{background:var(--bamboo)}
+.grid .dot:nth-child(5){margin-right:7px}
+.grid .sum{margin-left:8px;font-family:var(--f-display);font-size:.85rem;color:var(--mist);font-variant-numeric:tabular-nums;min-width:2.4em}
+.grid .row:last-child .sum{color:var(--lantern)}
+
+.shuriken-fly{position:fixed;left:0;top:0;width:26px;height:26px;pointer-events:none;z-index:50;color:#e3e5f5}
+
+/* ---------- result ---------- */
+.result-head{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center}
+.result-head .ninja{width:120px}
+.result-head h2{font-family:var(--f-display);font-size:1.9rem;line-height:1.1;margin:0 0 6px;text-wrap:balance}
+.result-head p{margin:0;color:var(--mist);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stat{background:var(--night-2);border:2px solid var(--line);border-radius:16px;padding:12px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font-family:var(--f-display);font-size:1.8rem;line-height:1.1;font-weight:400;font-variant-numeric:tabular-nums}
+.stat span{font-weight:700;font-size:.82rem;color:var(--mist);line-height:1.3}
+.stat.hl{border-color:var(--lantern)}
+.stat.hl b{color:var(--lantern)}
+.note{background:var(--paper);color:var(--ink);border-radius:16px;padding:14px 16px;font-weight:700}
+.note p{margin:0}
+.note p + p{margin-top:6px}
+.gains{display:flex;flex-direction:column;gap:6px}
+.gain{display:flex;align-items:center;gap:10px;font-weight:800}
+.gain svg{width:20px;height:20px;color:var(--lantern)}
+.belt-up{background:var(--night-2);border:3px solid var(--lantern);border-radius:18px;padding:16px;text-align:center;box-shadow:0 0 30px var(--lantern-soft)}
+.belt-up h3{font-family:var(--f-display);font-size:1.5rem;margin:0 0 4px}
+.belt-up p{margin:0;font-weight:700;color:var(--mist)}
+.result-actions{display:flex;flex-wrap:wrap;gap:12px}
+.result-actions > *{flex:1 1 180px}
+
+@media (max-width:420px){
+  .hero{grid-template-columns:120px 1fr}
+  .moon{width:120px;height:120px}
+  .moon .ninja{width:92px}
+  .belt-name{font-size:1.3rem}
+  .tile .n{font-size:1.45rem}
+  .result-head{grid-template-columns:90px 1fr}
+  .result-head .ninja{width:90px}
+  .result-head h2{font-size:1.5rem}
+  .stat b{font-size:1.5rem}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<div class="wrap">
+
+  <!-- ============ DOJO ============ -->
+  <section class="screen" id="dojo">
+    <div class="topbar">
+      <h1 class="brand"><small>Kleines Einmaleins</small>Einmaleins-Dojo</h1>
+      <button type="button" class="icon-btn sound-btn" aria-label="Ton an oder aus"></button>
+    </div>
+
+    <div class="hero">
+      <div class="moon"><div class="ninja" id="ninjaBig"></div></div>
+      <div class="belt-card">
+        <p class="label">Dein Gürtel</p>
+        <h2 class="belt-name"><span class="belt-swatch"></span><span id="beltName">Weißer Gürtel</span></h2>
+        <div class="track" aria-hidden="true"><i id="beltFill"></i></div>
+        <p class="belt-next" id="beltNext"></p>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <p class="label">Welche Reihen trainierst du?</p>
+      <div class="tiles" id="tiles"></div>
+      <div class="chips">
+        <button type="button" class="chip" data-set="2,5,10">Start: 2 · 5 · 10</button>
+        <button type="button" class="chip" data-set="3,4,6,7,8,9">Profi: 3 4 6 7 8 9</button>
+        <button type="button" class="chip" data-set="1,2,3,4,5,6,7,8,9,10">Alle Reihen</button>
+      </div>
+    </div>
+
+    <div class="start-row">
+      <button type="button" class="btn-main" id="startBtn">Training starten</button>
+      <p class="hint-txt" id="startHint">10 Laternen anzünden</p>
+    </div>
+
+    <details class="parents">
+      <summary>Für Eltern: So lernt das Dojo</summary>
+      <ul>
+        <li>Fehler kosten nichts. Es gibt keine Leben und keine roten Kreuze. Nach einem Fehler zeigt der Ninja einen Rechentrick und ein Punktefeld, dann darf man nochmal.</li>
+        <li>Die falschen Antworten sind typische Verwechsler: Nachbaraufgaben wie 7 · 7 oder 6 · 8 statt 7 · 8 und andere Ergebnisse aus dem Einmaleins. Raten hilft kaum, Nachdenken schon.</li>
+        <li>Eine falsch gelöste Aufgabe kommt zwei, drei Aufgaben später als „Comeback-Chance“ zurück. Trifft er sie dann, zählt das als Comeback. So wird aus dem Fehler ein Erfolg, den er sieht.</li>
+        <li>Aufgaben, die noch nicht sitzen, kommen häufiger dran. Tauschaufgaben wie 3 · 7 und 7 · 3 zählen als eine.</li>
+        <li>Shuriken (bis zu 3 pro Reihe) zeigen, wie sicher eine Reihe sitzt. Sie wachsen bei Treffern im ersten Versuch. Genug Shuriken bringen den nächsten Gürtel.</li>
+        <li>Bewährte Reihenfolge: 2, 5, 10, dann 4 und 3, dann 9, zum Schluss 6, 8 und 7.</li>
+        <li>Der Fortschritt bleibt in diesem Browser auf diesem Gerät gespeichert.</li>
+      </ul>
+      <div class="reset-row" id="resetRow">
+        <button type="button" id="resetAsk">Fortschritt zurücksetzen</button>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ TRAINING ============ -->
+  <section class="screen" id="game" hidden>
+    <div class="topbar">
+      <button type="button" class="icon-btn" id="backBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        Dojo
+      </button>
+      <span class="points" aria-label="Punkte"><span class="shu-ico"></span><span id="pts">0</span></span>
+      <button type="button" class="icon-btn sound-btn" aria-label="Ton an oder aus"></button>
+    </div>
+
+    <div class="lanterns" id="lanterns" aria-label="Fortschritt"></div>
+
+    <div class="say">
+      <div class="ninja" id="ninjaSmall"></div>
+      <div class="bubble" id="bubble" aria-live="polite">Welche Zahl trifft?</div>
+    </div>
+
+    <div class="card">
+      <span class="tag" id="tag" hidden>Comeback-Chance</span>
+      <div class="eq" id="eq"></div>
+    </div>
+
+    <div class="answers" id="answers"></div>
+
+    <button type="button" class="trick-btn" id="trickBtn">
+      <span class="shu-ico"></span> Ninja-Trick zeigen
+    </button>
+    <div class="hint" id="hint" hidden>
+      <p class="trick" id="trickText"></p>
+      <div class="grid" id="grid"></div>
+      <p class="sub" id="gridText"></p>
+    </div>
+  </section>
+
+  <!-- ============ ERGEBNIS ============ -->
+  <section class="screen" id="result" hidden>
+    <div class="result-head">
+      <div class="ninja" id="ninjaEnd"></div>
+      <div>
+        <h2 id="resTitle">Alle Laternen brennen!</h2>
+        <p id="resSub">Starkes Training, Ninja.</p>
+      </div>
+    </div>
+    <div class="lanterns" id="lanternsEnd" aria-hidden="true"></div>
+    <div class="stats">
+      <div class="stat"><b id="sPts">0</b><span>Punkte</span></div>
+      <div class="stat"><b id="sClean">0</b><span>sofort getroffen</span></div>
+      <div class="stat hl"><b id="sCome">0</b><span>Comebacks</span></div>
+    </div>
+    <div class="note" id="note"></div>
+    <div class="gains" id="gains"></div>
+    <div class="belt-up" id="beltUp" hidden>
+      <h3 id="beltUpTitle"></h3>
+      <p>Dein Ninja trägt ab jetzt die neue Farbe.</p>
+    </div>
+    <div class="result-actions">
+      <button type="button" class="btn-main" id="againBtn">Nochmal trainieren</button>
+      <button type="button" class="btn-ghost" id="homeBtn">Zum Dojo</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const store = {
+    get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+    set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  };
+
+  let levels = store.get('dojo.levels', {}) || {};
+  let selected = store.get('dojo.sel', [2,5,10]);
+  if (!Array.isArray(selected) || !selected.length) selected = [2,5,10];
+  let muted = !!store.get('dojo.muted', false);
+
+  const BELTS = [
+    {min:0,  name:'Weißer',    dat:'weißen',    color:'#f5f3ea', edge:'#bdb8a6'},
+    {min:3,  name:'Gelber',    dat:'gelben',    color:'#ffd84a', edge:'#c9a21f'},
+    {min:7,  name:'Oranger',   dat:'orangen',   color:'#ff9a3c', edge:'#c46a17'},
+    {min:12, name:'Grüner',    dat:'grünen',    color:'#4fc276', edge:'#2f8a4f'},
+    {min:17, name:'Blauer',    dat:'blauen',    color:'#4f8dff', edge:'#2c5fc0'},
+    {min:22, name:'Brauner',   dat:'braunen',   color:'#9a6440', edge:'#6b4027'},
+    {min:27, name:'Schwarzer', dat:'schwarzen', color:'#121214', edge:'#e9e1cc'},
+  ];
+
+  /* ---------- svg bits ---------- */
+  const SHU = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4 Z"/><circle cx="12" cy="12" r="2.4" fill="var(--night)"/></svg>';
+  const SHU_STAR = c => `<svg viewBox="0 0 24 24" class="${c}" aria-hidden="true"><path fill="currentColor" d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4 Z"/></svg>`;
+  const LANTERN = '<svg viewBox="0 0 24 38" aria-hidden="true"><line x1="12" y1="0" x2="12" y2="5" stroke="var(--line)" stroke-width="1.5"/><rect x="7" y="4" width="10" height="3.5" rx="1.2" fill="var(--cap)"/><ellipse class="lb" cx="12" cy="18" rx="10" ry="11.5"/><path d="M12 7 v22 M6.5 9.5 q-3.5 8.5 0 17 M17.5 9.5 q3.5 8.5 0 17" stroke="rgba(0,0,0,.2)" stroke-width="1.2" fill="none"/><rect x="7" y="28.5" width="10" height="3.5" rx="1.2" fill="var(--cap)"/><line class="tassel" x1="12" y1="32" x2="12" y2="37.5" stroke-width="2" stroke-linecap="round"/></svg>';
+  const NINJA = `<svg viewBox="0 0 100 120" class="ninja-svg" aria-hidden="true">
+    <ellipse cx="50" cy="114" rx="28" ry="5" fill="rgba(0,0,0,.3)"/>
+    <path d="M71 24 C80 18 88 20 96 14 C93 24 85 28 74 30 Z" fill="var(--band)"/>
+    <path d="M71 28 C80 30 87 36 92 44 C85 40 78 37 72 34 Z" fill="var(--band)"/>
+    <ellipse cx="21" cy="80" rx="7.5" ry="13" transform="rotate(16 21 80)" fill="var(--suit)" stroke="var(--suit-edge)" stroke-width="2"/>
+    <ellipse cx="79" cy="80" rx="7.5" ry="13" transform="rotate(-16 79 80)" fill="var(--suit)" stroke="var(--suit-edge)" stroke-width="2"/>
+    <rect x="24" y="60" width="52" height="50" rx="18" fill="var(--suit)" stroke="var(--suit-edge)" stroke-width="2"/>
+    <rect x="25" y="83" width="50" height="8" fill="var(--belt)" stroke="var(--belt-edge)" stroke-width="1.5"/>
+    <path d="M48 89 L42 103 L47 102 Z M52 89 L58 103 L53 102 Z" fill="var(--belt)" stroke="var(--belt-edge)" stroke-width="1.2" stroke-linejoin="round"/>
+    <rect x="44.5" y="81.5" width="11" height="11" rx="3" fill="var(--belt)" stroke="var(--belt-edge)" stroke-width="1.5"/>
+    <circle cx="50" cy="40" r="28" fill="var(--suit)" stroke="var(--suit-edge)" stroke-width="2"/>
+    <rect x="29" y="21" width="42" height="7" rx="3.5" fill="var(--band)"/>
+    <rect x="27" y="33" width="46" height="17" rx="8.5" fill="var(--skin)"/>
+    <ellipse class="eye" cx="41" cy="41.5" rx="3.4" ry="4.3" fill="#1c1a2b"/>
+    <ellipse class="eye" cx="59" cy="41.5" rx="3.4" ry="4.3" fill="#1c1a2b"/>
+    <circle cx="42.3" cy="40" r="1.2" fill="#fff"/>
+    <circle cx="60.3" cy="40" r="1.2" fill="#fff"/>
+  </svg>`;
+  $$('.ninja').forEach(n => n.innerHTML = NINJA);
+  $$('.shu-ico').forEach(n => { n.innerHTML = SHU; n.style.display='inline-flex'; n.style.width='20px'; n.style.color='var(--lantern)'; });
+
+  /* ---------- sound ---------- */
+  let ac = null;
+  function tone(f, t0, dur, type='triangle', vol=.12){
+    if (muted) return;
+    try{
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state !== 'running') ac.resume();
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = type; o.frequency.value = f;
+      const s = ac.currentTime + t0;
+      g.gain.setValueAtTime(0.0001, s);
+      g.gain.linearRampToValueAtTime(vol, s + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, s + dur);
+      o.connect(g); g.connect(ac.destination);
+      o.start(s); o.stop(s + dur + .05);
+    }catch(e){}
+  }
+  const sfx = {
+    ok(){ tone(660,0,.16); tone(990,.08,.24); },
+    hit(){ tone(1320,0,.35,'sine',.07); tone(1760,.05,.3,'sine',.04); },
+    soft(){ tone(392,0,.2,'sine',.09); tone(330,.1,.26,'sine',.07); },
+    win(){ [523,659,784,1046].forEach((f,i)=>tone(f,i*.12,.32)); }
+  };
+  const SPK_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
+  const SPK_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';
+  function renderSound(){ $$('.sound-btn').forEach(b => { b.innerHTML = (muted ? SPK_OFF : SPK_ON) + (muted ? 'Aus' : 'Ton'); }); }
+  $$('.sound-btn').forEach(b => b.addEventListener('click', () => { muted = !muted; store.set('dojo.muted', muted); renderSound(); if(!muted) sfx.ok(); }));
+  renderSound();
+
+  /* ---------- knowledge model ---------- */
+  const fkey = (a,b) => a < b ? `${a}x${b}` : `${b}x${a}`;
+  const lvl = (a,b) => levels[fkey(a,b)] || 0;
+  const setLvl = (key, v) => { levels[key] = Math.max(0, Math.min(3, v)); store.set('dojo.levels', levels); };
+  function starsFor(r){ let s = 0; for (let k=1;k<=10;k++) s += lvl(r,k); return Math.min(3, Math.floor(s/9)); }
+  function totalStars(){ let t = 0; for (let r=1;r<=10;r++) t += starsFor(r); return t; }
+  function beltFor(t){ let b = BELTS[0]; for (const x of BELTS) if (t >= x.min) b = x; return b; }
+  function applyBelt(b){ const s = document.documentElement.style; s.setProperty('--belt', b.color); s.setProperty('--belt-edge', b.edge); }
+
+  const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  const pickOne = a => a[Math.floor(Math.random()*a.length)];
+
+  const PRODUCTS = [...new Set(Array.from({length:100},(_,i)=>(Math.floor(i/10)+1)*(i%10+1)))];
+
+  // Distractors: neighbour tasks first (one factor off by one), then nearby results from the table.
+  function makeOptions(r,k){
+    const c = r*k, used = new Set([c]), picks = [];
+    const ok = v => Number.isInteger(v) && v > 0 && v <= 100 && !used.has(v);
+    const add = v => { used.add(v); picks.push(v); };
+    for (const v of shuffle([r*(k-1), r*(k+1), (r-1)*k, (r+1)*k])) { if (picks.length >= 2) break; if (ok(v)) add(v); }
+    const near = PRODUCTS.filter(p => p !== c).sort((x,y) => Math.abs(x-c) - Math.abs(y-c)).slice(0,5);
+    for (const v of shuffle(near)) { if (picks.length >= 3) break; if (ok(v)) add(v); }
+    for (const v of near) { if (picks.length >= 3) break; if (ok(v)) add(v); }
+    let d = 1; while (picks.length < 3) { for (const v of [c+d, c-d]) if (picks.length < 3 && ok(v)) add(v); d++; }
+    return shuffle([c, ...picks]);
+  }
+
+  // Strategy hint: m groups of n. Pick the factor that gives the easiest strategy as m.
+  const PRI = [1,2,10,5,9,4,3,6,8,7];
+  function trick(a,b){
+    let m, n;
+    if (PRI.indexOf(a) <= PRI.indexOf(b)) { m=a; n=b; } else { m=b; n=a; }
+    const T = {
+      1: `1 · ${n} ist einfach ${n}.`,
+      2: `Verdopple die ${n}. Also ${n} + ${n}.`,
+      10:`10 · ${n}: Hänge an die ${n} eine Null an.`,
+      5: `Rechne erst 10 · ${n} = ${10*n}. Davon die Hälfte.`,
+      9: `Rechne 10 · ${n} = ${10*n}. Dann einmal ${n} weniger.`,
+      4: `Verdopple die ${n}: das ist ${2*n}. Dann nochmal verdoppeln.`,
+      3: `2 · ${n} = ${2*n}. Dann noch einmal ${n} dazu.`,
+      6: `5 · ${n} = ${5*n}. Dann noch einmal ${n} dazu.`,
+      7: `5 · ${n} = ${5*n}. Dann noch 2 · ${n} = ${2*n} dazu.`,
+      8: `10 · ${n} = ${10*n}. Dann 2 · ${n} = ${2*n} wegnehmen.`
+    };
+    const split = {3:2, 4:2, 6:5, 7:5, 8:5, 9:5}[m] || 0;
+    return { m, n, text: T[m], split };
+  }
+
+  /* ---------- round ---------- */
+  let round = null;
+  const MSG = {
+    intro: ['Welche Zahl trifft?','Ziel anvisieren …','Konzentrier dich, Ninja.','Du schaffst das.','Ruhig atmen. Dann werfen.'],
+    ok: ['Treffer!','Volltreffer!','Lautlos und schnell!','Wie ein Schatten!','Genau ins Ziel!','Ninja-Blick!'],
+    wrong: ['Fast! Jeder Ninja trainiert. Schau mal:','Knapp daneben. Mit dem Trick klappt es:','Gut, dass das passiert. So lernst du es:','Nochmal zielen. Hier ist ein Trick:'],
+    come: ['Comeback! Die sitzt jetzt.','Stark! Vorhin knapp, jetzt sicher.','Comeback! So wird man Meister.']
+  };
+
+  function makeItem(r,k,base,repeat=false){
+    const [a,b] = Math.random() < .5 ? [k,r] : [r,k];
+    return { r, k, a, b, ans: r*k, key: fkey(r,k), base, repeat, opts: makeOptions(r,k) };
+  }
+
+  function buildRound(){
+    const seen = new Set(), pool = [];
+    for (const r of selected) for (let k=1;k<=10;k++){
+      const key = fkey(r,k); if (seen.has(key)) continue; seen.add(key);
+      pool.push({ r, k, w: 4 - lvl(r,k) });
+    }
+    const out = [];
+    while (out.length < 10 && pool.length){
+      const tot = pool.reduce((s,c)=>s+c.w,0);
+      let x = Math.random()*tot, i = 0;
+      for (; i < pool.length; i++){ x -= pool[i].w; if (x <= 0) break; }
+      out.push(pool.splice(Math.min(i, pool.length-1),1)[0]);
+    }
+    return out.map(c => makeItem(c.r, c.k, true));
+  }
+
+  function show(id){ ['dojo','game','result'].forEach(s => $('#'+s).hidden = s !== id); window.scrollTo(0,0); }
+
+  function renderLanterns(el, lit, popIdx=-1){
+    el.innerHTML = '';
+    for (let i=0;i<10;i++){
+      const d = document.createElement('div');
+      d.className = 'lantern' + (i < lit ? ' lit' : '') + (i === popIdx ? ' pop' : '');
+      d.innerHTML = LANTERN;
+      el.appendChild(d);
+    }
+  }
+
+  function say(t){ $('#bubble').textContent = t; }
+  function ninjaAnim(cls){
+    const n = $('#ninjaSmall'); n.classList.remove('hop','think'); void n.offsetWidth; n.classList.add(cls);
+  }
+
+  function startRound(){
+    const total = totalStars();
+    round = {
+      queue: buildRound(), idx: 0, lit: 0, points: 0, comebacks: 0, clean: 0, repeats: 0,
+      beltBefore: beltFor(total),
+      starsBefore: Object.fromEntries(selected.map(r => [r, starsFor(r)]))
+    };
+    $('#pts').textContent = '0';
+    renderLanterns($('#lanterns'), 0);
+    show('game');
+    nextQuestion();
+  }
+
+  function cur(){ return round.queue[round.idx]; }
+
+  function nextQuestion(){
+    if (round.idx >= round.queue.length) return finish();
+    const it = cur();
+    it.tries = 0; it.hintUsed = false; it.done = false;
+    $('#tag').hidden = !it.repeat;
+    $('#eq').innerHTML = `<span>${it.a}</span><span class="op">·</span><span>${it.b}</span><span class="op">=</span><span class="slot" id="slot">?</span>`;
+    const box = $('#answers'); box.innerHTML = '';
+    it.opts.forEach(v => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'ans'; b.textContent = v; b.dataset.v = v;
+      b.addEventListener('click', () => pick(b, v));
+      box.appendChild(b);
+    });
+    $('#hint').hidden = true;
+    $('#trickBtn').hidden = false;
+    say(it.repeat ? 'Die kam vorhin schon. Jetzt zeigst du es ihr!' : pickOne(MSG.intro));
+  }
+
+  function scheduleRepeat(it){
+    if (round.repeats >= 4) return false;
+    const pending = round.queue.slice(round.idx+1).some(q => q.key === it.key);
+    if (pending) return true;
+    const pos = Math.min(round.idx + 3, round.queue.length);
+    round.queue.splice(pos, 0, makeItem(it.r, it.k, false, true));
+    round.repeats++;
+    return true;
+  }
+
+  function pick(btn, v){
+    const it = cur();
+    if (it.done || btn.disabled) return;
+    if (v === it.ans){
+      it.done = true;
+      btn.classList.remove('reveal'); btn.classList.add('right');
+      $$('#answers .ans').forEach(b => { if (b !== btn) b.disabled = true; b.classList.remove('reveal'); });
+      const slot = $('#slot'); slot.textContent = it.ans; slot.classList.add('filled');
+      $('#trickBtn').hidden = true;
+      ninjaAnim('hop'); sfx.ok();
+      const first = it.tries === 0;
+      if (first){
+        if (!it.hintUsed) setLvl(it.key, lvl(it.r,it.k) + 1);
+        round.points += 10; round.clean++;
+        if (it.repeat){ round.comebacks++; say(pickOne(MSG.come)); }
+        else say(it.hintUsed ? 'Treffer mit Trick! Gut gemacht.' : pickOne(MSG.ok));
+      } else {
+        round.points += 5;
+        const again = round.queue.slice(round.idx+1).some(q => q.key === it.key);
+        say(again ? 'Geschafft! Sie kommt gleich nochmal, zum Festigen.' : 'Geschafft! Merk sie dir gut.');
+      }
+      $('#pts').textContent = round.points;
+      if (it.base){
+        const target = $('#lanterns').children[round.lit];
+        round.lit++;
+        throwShuriken(target, () => { renderLanterns($('#lanterns'), round.lit, round.lit-1); sfx.hit(); });
+      }
+      const wait = first ? 1200 : 2000;
+      setTimeout(() => { round.idx++; nextQuestion(); }, reduce ? Math.min(wait, 1100) : wait);
+    } else {
+      it.tries++;
+      btn.disabled = true; btn.classList.add('tried','wobble');
+      ninjaAnim('think'); sfx.soft();
+      if (it.tries === 1){
+        setLvl(it.key, lvl(it.r,it.k) - 1);
+        scheduleRepeat(it);
+        say(pickOne(MSG.wrong));
+        showHint(it, 1);
+      } else {
+        say('Ich zeig dir, wo sie steckt. Zähl mal mit!');
+        showHint(it, 2);
+        $$('#answers .ans').forEach(b => { if (+b.dataset.v === it.ans) b.classList.add('reveal'); });
+      }
+    }
+  }
+
+  function showHint(it, stage){
+    const t = trick(it.a, it.b);
+    $('#trickText').textContent = t.text;
+    $('#gridText').textContent = `${t.m} ${t.m === 1 ? 'Reihe' : 'Reihen'} mit je ${t.n} ${t.n === 1 ? 'Punkt' : 'Punkten'}`;
+    const g = $('#grid'); g.innerHTML = '';
+    const hint = $('#hint'); hint.hidden = false;
+    const w = g.clientWidth || 300;
+    const reserve = stage === 2 ? 56 : 10;
+    const d = Math.max(8, Math.min(22, Math.floor((w - reserve - 7 - (t.n-1)*3) / t.n)));
+    g.style.setProperty('--d', d + 'px');
+    for (let i=0;i<t.m;i++){
+      const row = document.createElement('div'); row.className = 'row';
+      for (let j=0;j<t.n;j++){
+        const dot = document.createElement('span');
+        dot.className = 'dot' + (t.split && i >= t.split ? ' b' : '');
+        row.appendChild(dot);
+      }
+      if (stage === 2){
+        const s = document.createElement('span'); s.className = 'sum'; s.textContent = (i+1)*t.n;
+        row.appendChild(s);
+      }
+      g.appendChild(row);
+    }
+    $('#trickBtn').hidden = true;
+    if (!reduce) hint.scrollIntoView({ block:'nearest', behavior:'smooth' });
+  }
+
+  $('#trickBtn').addEventListener('click', () => {
+    const it = cur(); if (!it || it.done) return;
+    if (it.tries === 0) it.hintUsed = true;
+    say('Hier ist mein Geheim-Trick:');
+    showHint(it, 1);
+  });
+
+  function throwShuriken(target, done){
+    if (reduce || !target || !target.animate){ done(); return; }
+    const from = $('#ninjaSmall').getBoundingClientRect();
+    const to = target.getBoundingClientRect();
+    const el = document.createElement('div');
+    el.className = 'shuriken-fly'; el.innerHTML = SHU;
+    document.body.appendChild(el);
+    const x0 = from.left + from.width*.75 - 13, y0 = from.top + from.height*.55 - 13;
+    const x1 = to.left + to.width/2 - 13,      y1 = to.top + to.height/2 - 13;
+    const a = el.animate([
+      { transform:`translate(${x0}px,${y0}px) rotate(0deg) scale(.8)` },
+      { transform:`translate(${(x0+x1)/2}px,${Math.min(y0,y1)-30}px) rotate(400deg) scale(1.1)`, offset:.55 },
+      { transform:`translate(${x1}px,${y1}px) rotate(760deg) scale(.9)` }
+    ], { duration: 520, easing:'cubic-bezier(.35,.6,.45,1)', fill:'forwards' });
+    a.onfinish = () => { el.remove(); done(); };
+  }
+
+  function finish(){
+    const total = totalStars(), after = beltFor(total);
+    $('#sPts').textContent = round.points;
+    $('#sClean').textContent = round.clean;
+    $('#sCome').textContent = round.comebacks;
+    renderLanterns($('#lanternsEnd'), 10);
+    applyBelt(after);
+    const errs = round.repeats;
+    $('#resTitle').textContent = 'Alle Laternen brennen!';
+    $('#resSub').textContent = round.clean >= 9 ? 'Was für ein Wurf. Du bist ein Schatten-Ninja.' : 'Starkes Training. Jede Runde macht dich schneller.';
+    const note = $('#note');
+    if (round.comebacks > 0){
+      note.innerHTML = `<p>${round.comebacks} ${round.comebacks === 1 ? 'Aufgabe hast' : 'Aufgaben hast'} du heute neu gelernt.</p><p>Erst daneben, später getroffen. So trainieren echte Ninjas.</p>`;
+    } else if (errs > 0){
+      note.innerHTML = `<p>Ein paar Aufgaben waren knifflig. Die kommen nächstes Mal öfter dran, bis sie sitzen.</p>`;
+    } else {
+      note.innerHTML = `<p>Kein einziger Wurf daneben. Probier doch mal eine schwerere Reihe!</p>`;
+    }
+    const gains = selected.map(r => ({ r, b: round.starsBefore[r] ?? 0, a: starsFor(r) })).filter(g => g.a > g.b);
+    $('#gains').innerHTML = gains.map(g => `<div class="gain">${SHU}<span>${g.r}er-Reihe: ${g.a - g.b === 1 ? 'ein neues Shuriken' : (g.a - g.b) + ' neue Shuriken'}</span></div>`).join('');
+    const up = after.min > round.beltBefore.min;
+    $('#beltUp').hidden = !up;
+    if (up) $('#beltUpTitle').textContent = `Neuer Gürtel: ${after.name} Gürtel!`;
+    show('result');
+    sfx.win();
+  }
+
+  /* ---------- dojo ---------- */
+  const tiles = $('#tiles');
+  for (let r=1;r<=10;r++){
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'tile'; b.dataset.r = r;
+    b.innerHTML = `<span class="n">${r}</span><span class="er">${r}er</span><span class="stars"></span>`;
+    b.addEventListener('click', () => {
+      selected = selected.includes(r) ? selected.filter(x => x !== r) : [...selected, r].sort((x,y)=>x-y);
+      store.set('dojo.sel', selected); renderDojo();
+    });
+    tiles.appendChild(b);
+  }
+  $$('.chip').forEach(c => c.addEventListener('click', () => {
+    selected = c.dataset.set.split(',').map(Number); store.set('dojo.sel', selected); renderDojo();
+  }));
+
+  function renderDojo(){
+    const total = totalStars(), b = beltFor(total); applyBelt(b);
+    $('#beltName').textContent = b.name + ' Gürtel';
+    const ni = BELTS.indexOf(b) + 1;
+    if (ni < BELTS.length){
+      const nb = BELTS[ni], need = nb.min - total;
+      $('#beltNext').textContent = `Noch ${need} Shuriken bis zum ${nb.dat} Gürtel`;
+      $('#beltFill').style.width = ((total - b.min) / (nb.min - b.min) * 100) + '%';
+    } else {
+      $('#beltNext').textContent = 'Meister-Ninja! Alle Reihen sitzen.';
+      $('#beltFill').style.width = '100%';
+    }
+    $$('.tile').forEach(t => {
+      const r = +t.dataset.r, s = starsFor(r);
+      t.setAttribute('aria-pressed', selected.includes(r) ? 'true' : 'false');
+      t.setAttribute('aria-label', `${r}er-Reihe, ${s} von 3 Shuriken`);
+      t.querySelector('.stars').innerHTML = [0,1,2].map(i => SHU_STAR(i < s ? 'on' : '')).join('');
+    });
+    const sb = $('#startBtn');
+    sb.disabled = selected.length === 0;
+    $('#startHint').textContent = selected.length
+      ? `${selected.map(r=>r+'er').join(', ')} · 10 Laternen anzünden`
+      : 'Tippe mindestens eine Reihe an';
+  }
+
+  $('#startBtn').addEventListener('click', startRound);
+  $('#againBtn').addEventListener('click', startRound);
+  $('#homeBtn').addEventListener('click', () => { renderDojo(); show('dojo'); });
+  $('#backBtn').addEventListener('click', () => { renderDojo(); show('dojo'); });
+
+  function renderReset(confirming){
+    const row = $('#resetRow');
+    row.innerHTML = confirming
+      ? '<span style="font-weight:700">Wirklich alle Shuriken und Gürtel löschen?</span><button type="button" class="danger" id="resetYes">Ja, löschen</button><button type="button" id="resetNo">Abbrechen</button>'
+      : '<button type="button" id="resetAsk">Fortschritt zurücksetzen</button>';
+    if (confirming){
+      $('#resetYes').addEventListener('click', () => { levels = {}; store.set('dojo.levels', levels); renderDojo(); renderReset(false); });
+      $('#resetNo').addEventListener('click', () => renderReset(false));
+    } else {
+      $('#resetAsk').addEventListener('click', () => renderReset(true));
+    }
+  }
+  renderReset(false);
+  renderDojo();
+})();
+</script>
+
+</body></html>
