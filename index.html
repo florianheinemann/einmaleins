@@ -227,7 +227,8 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
 .cert input:focus{outline:none;border-bottom-color:#c9a21f}
 .cert .date{color:#6b6250;font-size:.9rem}
 .fx{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:60}
-.app-footer{margin:8px 0 0;text-align:center;color:var(--dim);font-size:.75rem;font-weight:700;letter-spacing:.04em}
+.app-footer{margin:8px 0 0;text-align:center}
+.app-footer button{background:transparent;border:none;padding:8px 12px;color:var(--dim);font-size:.75rem;font-weight:700;letter-spacing:.04em}
 
 @media (max-width:420px){
   .hero{grid-template-columns:120px 1fr}
@@ -385,7 +386,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
     </div>
   </section>
 
-  <p class="app-footer" id="appVersion"></p>
+  <p class="app-footer"><button type="button" id="appVersion" aria-label="App neu laden"></button></p>
 </div>
 
 <script>
@@ -404,8 +405,15 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   let muted = !!store.get('dojo.muted', false);
   let master = store.get('dojo.master', null);   // {date, name}: set once all 30 shuriken are reached, never lost by mistakes
 
-  const VERSION = '1.2.1';
-  $('#appVersion').textContent = `Einmaleins-Dojo · Version ${VERSION}`;
+  const VERSION = '1.2.2';
+  $('#appVersion').textContent = `Einmaleins-Dojo · Version ${VERSION} · ↻ Neu laden`;
+  // Home-screen apps on iOS have no reload button: bypass the HTTP cache, refresh the service worker, then reload.
+  $('#appVersion').addEventListener('click', async e => {
+    e.currentTarget.textContent = 'Lädt neu …';
+    try { const reg = await navigator.serviceWorker?.getRegistration(); await reg?.update(); } catch (err) {}
+    try { await fetch(location.pathname, { cache: 'reload' }); } catch (err) {}
+    location.reload();
+  });
 
   const BELTS = [
     {min:0,  name:'Weißer',    dat:'weißen',    color:'#f5f3ea', edge:'#bdb8a6'},
