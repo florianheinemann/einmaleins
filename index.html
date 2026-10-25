@@ -107,6 +107,10 @@ button:focus-visible{outline:3px solid var(--lantern);outline-offset:3px}
 .tile[aria-pressed="true"] .er{color:#6b6250}
 .tile[aria-pressed="true"] .stars svg{color:var(--paper-2)}
 .tile[aria-pressed="true"] .stars svg.on{color:var(--lantern-deep)}
+.tile .prog{width:70%;height:5px;border-radius:99px;background:var(--night-3);overflow:hidden;margin-top:2px}
+.tile .prog i{display:block;height:100%;width:0;background:var(--lantern);border-radius:99px;transition:width .6s ease}
+.tile[aria-pressed="true"] .prog{background:var(--paper-2)}
+.tile[aria-pressed="true"] .prog i{background:var(--lantern-deep)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{background:transparent;border:2px solid var(--line);border-radius:99px;padding:6px 14px;font-weight:700;font-size:.9rem;color:var(--mist)}
 .chip:active{background:var(--night-2)}
@@ -400,7 +404,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   let muted = !!store.get('dojo.muted', false);
   let master = store.get('dojo.master', null);   // {date, name}: set once all 30 shuriken are reached, never lost by mistakes
 
-  const VERSION = '1.2.0';
+  const VERSION = '1.2.1';
   $('#appVersion').textContent = `Einmaleins-Dojo · Version ${VERSION}`;
 
   const BELTS = [
@@ -476,7 +480,11 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   const fkey = (a,b) => a < b ? `${a}x${b}` : `${b}x${a}`;
   const lvl = (a,b) => levels[fkey(a,b)] || 0;
   const setLvl = (key, v) => { levels[key] = Math.max(0, Math.min(3, v)); store.set('dojo.levels', levels); };
-  function starsFor(r){ let s = 0; for (let k=1;k<=10;k++) s += lvl(r,k); return Math.min(3, Math.floor(s/9)); }
+  function rowSum(r){ let s = 0; for (let k=1;k<=10;k++) s += lvl(r,k); return s; }
+  function starsFor(r){ return Math.min(3, Math.floor(rowSum(r)/9)); }
+  // Fractional shuriken (0–3) so progress shows before a whole shuriken is earned.
+  function rowProgress(r){ return Math.min(3, rowSum(r)/9); }
+  function nextFrac(r){ const p = rowProgress(r); return p >= 3 ? 1 : p - Math.floor(p); }
   function totalStars(){ let t = 0; for (let r=1;r<=10;r++) t += starsFor(r); return t; }
   function beltFor(t){ if (master) return GOLD; let b = BELTS[0]; for (const x of BELTS) if (t >= x.min) b = x; return b; }
   function applyBelt(b){
@@ -575,7 +583,8 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
     round = {
       queue: buildRound(), idx: 0, lit: 0, points: 0, comebacks: 0, clean: 0, repeats: 0,
       beltBefore: beltFor(total),
-      starsBefore: Object.fromEntries(selected.map(r => [r, starsFor(r)]))
+      starsBefore: Object.fromEntries(selected.map(r => [r, starsFor(r)])),
+      progBefore: Object.fromEntries(selected.map(r => [r, rowProgress(r)]))
     };
     $('#pts').textContent = '0';
     renderLanterns($('#lanterns'), 0);
@@ -731,8 +740,14 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
     } else {
       note.innerHTML = `<p>Kein einziger Wurf daneben. Probier doch mal eine schwerere Reihe!</p>`;
     }
-    const gains = selected.map(r => ({ r, b: round.starsBefore[r] ?? 0, a: starsFor(r) })).filter(g => g.a > g.b);
-    $('#gains').innerHTML = gains.map(g => `<div class="gain">${SHU}<span>${g.r}er-Reihe: ${g.a - g.b === 1 ? 'ein neues Shuriken' : (g.a - g.b) + ' neue Shuriken'}</span></div>`).join('');
+    const gains = selected.map(r => ({ r, b: round.starsBefore[r] ?? 0, a: starsFor(r), pb: round.progBefore[r] ?? 0, pa: rowProgress(r) }))
+      .filter(g => g.pa > g.pb);
+    $('#gains').innerHTML = gains.map(g => {
+      const txt = g.a > g.b
+        ? (g.a - g.b === 1 ? 'ein neues Shuriken' : (g.a - g.b) + ' neue Shuriken')
+        : `nächstes Shuriken zu ${Math.round(nextFrac(g.r)*100)} %`;
+      return `<div class="gain">${SHU}<span>${g.r}er-Reihe: ${txt}</span></div>`;
+    }).join('');
     const up = after.min > round.beltBefore.min;
     $('#beltUp').hidden = !up;
     if (up) $('#beltUpTitle').textContent = `Neuer Gürtel: ${after.name} Gürtel!`;
@@ -803,7 +818,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   for (let r=1;r<=10;r++){
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'tile'; b.dataset.r = r;
-    b.innerHTML = `<span class="n">${r}</span><span class="er">${r}er</span><span class="stars"></span>`;
+    b.innerHTML = `<span class="n">${r}</span><span class="er">${r}er</span><span class="stars"></span><span class="prog" aria-hidden="true"><i></i></span>`;
     b.addEventListener('click', () => {
       selected = selected.includes(r) ? selected.filter(x => x !== r) : [...selected, r].sort((x,y)=>x-y);
       store.set('dojo.sel', selected); renderDojo();
@@ -823,7 +838,8 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
     if (ni < BELTS.length){
       const nb = BELTS[ni], need = nb.min - total;
       $('#beltNext').textContent = `Noch ${need} Shuriken bis zum ${nb.dat} Gürtel`;
-      $('#beltFill').style.width = ((total - b.min) / (nb.min - b.min) * 100) + '%';
+      let prog = 0; for (let r=1;r<=10;r++) prog += rowProgress(r);
+      $('#beltFill').style.width = (Math.max(0, Math.min(1, (prog - b.min) / (nb.min - b.min))) * 100) + '%';
     } else {
       $('#beltNext').textContent = 'Großmeister! Das ganze Einmaleins sitzt.';
       $('#beltFill').style.width = '100%';
@@ -833,6 +849,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
       t.setAttribute('aria-pressed', selected.includes(r) ? 'true' : 'false');
       t.setAttribute('aria-label', `${r}er-Reihe, ${s} von 3 Shuriken`);
       t.querySelector('.stars').innerHTML = [0,1,2].map(i => SHU_STAR(i < s ? 'on' : '')).join('');
+      t.querySelector('.prog i').style.width = (nextFrac(r) * 100) + '%';
     });
     const sb = $('#startBtn');
     sb.disabled = selected.length === 0;
