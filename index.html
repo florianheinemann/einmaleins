@@ -405,7 +405,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   let muted = !!store.get('dojo.muted', false);
   let master = store.get('dojo.master', null);   // {date, name}: set once all 30 shuriken are reached, never lost by mistakes
 
-  const VERSION = '1.2.2';
+  const VERSION = '1.2.3';
   $('#appVersion').textContent = `Einmaleins-Dojo · Version ${VERSION} · ↻ Neu laden`;
   // Home-screen apps on iOS have no reload button: bypass the HTTP cache, refresh the service worker, then reload.
   $('#appVersion').addEventListener('click', async e => {
@@ -729,8 +729,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
 
   function finish(){
     const total = totalStars();
-    const newMaster = !master && total >= GOLD.min;
-    if (newMaster){ master = { date: new Date().toISOString(), name: '' }; store.set('dojo.master', master); }
+    const newMaster = checkMaster();
     const after = beltFor(total);
     $('#sPts').textContent = round.points;
     $('#sClean').textContent = round.clean;
@@ -765,6 +764,13 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   }
 
   /* ---------- grandmaster ---------- */
+  // Award the golden belt the moment all 30 shuriken are reached: at round end, on leaving a round early, or on app start.
+  function checkMaster(){
+    if (master || totalStars() < GOLD.min) return false;
+    master = { date: new Date().toISOString(), name: '' };
+    store.set('dojo.master', master);
+    return true;
+  }
   const CROWN = '<svg viewBox="0 0 30 24" aria-hidden="true"><path d="M2 21 L4 5 L10 12 L15 2 L20 12 L26 5 L28 21 Z" fill="#ffd84a" stroke="#c9a21f" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   $$('.crown-ico').forEach(n => n.innerHTML = CROWN);
   const fmtDate = iso => new Date(iso).toLocaleDateString('de-DE', { day:'numeric', month:'long', year:'numeric' });
@@ -869,7 +875,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   $('#startBtn').addEventListener('click', startRound);
   $('#againBtn').addEventListener('click', startRound);
   $('#homeBtn').addEventListener('click', () => { renderDojo(); show('dojo'); });
-  $('#backBtn').addEventListener('click', () => { renderDojo(); show('dojo'); });
+  $('#backBtn').addEventListener('click', () => { renderDojo(); if (checkMaster()) showMaster(); else show('dojo'); });
 
   function renderReset(confirming){
     const row = $('#resetRow');
@@ -885,6 +891,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   }
   renderReset(false);
   renderDojo();
+  if (checkMaster()) showMaster();
 })();
 </script>
 
