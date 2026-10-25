@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Einmaleins-Dojo</title>
 <meta name="description" content="Das kleine Einmaleins spielerisch üben – mit Ninja, Laternen und Gürteln.">
 <meta name="theme-color" content="#161a35">
@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px);background:#161a35;-webkit-text-size-adjust:100%}body{margin:0;padding:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}button{touch-action:manipulation}body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}</style>
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px);background:#161a35;-webkit-text-size-adjust:100%}body{margin:0;padding:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}html,body,button{touch-action:manipulation}body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
@@ -405,7 +405,11 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   let muted = !!store.get('dojo.muted', false);
   let master = store.get('dojo.master', null);   // {date, name}: set once all 30 shuriken are reached, never lost by mistakes
 
-  const VERSION = '1.2.3';
+  const VERSION = '1.2.4';
+
+  // No zooming: iOS ignores user-scalable=no, so also block pinch gestures (double-tap zoom is off via touch-action).
+  ['gesturestart','gesturechange','gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive:false }));
+  document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive:false });
   $('#appVersion').textContent = `Einmaleins-Dojo · Version ${VERSION} · ↻ Neu laden`;
   // Home-screen apps on iOS have no reload button: bypass the HTTP cache, refresh the service worker, then reload.
   $('#appVersion').addEventListener('click', async e => {
