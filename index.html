@@ -175,10 +175,10 @@ details.parents li{color:var(--paper)}
 .hint .sub{margin:0;color:var(--mist);font-weight:700;font-size:.9rem}
 .grid{display:flex;flex-direction:column;gap:3px;overflow-x:auto;padding-bottom:2px}
 .grid .row{display:flex;align-items:center;gap:3px}
-.grid .row:nth-child(5){margin-bottom:7px}
+.grid .row:nth-child(5n){margin-bottom:7px}
 .grid .dot{width:var(--d,16px);height:var(--d,16px);border-radius:50%;background:var(--lantern);flex:none}
 .grid .dot.b{background:var(--bamboo)}
-.grid .dot:nth-child(5){margin-right:7px}
+.grid .dot:nth-child(5n){margin-right:7px}
 .grid .sum{margin-left:8px;font-family:var(--f-display);font-size:.85rem;color:var(--mist);font-variant-numeric:tabular-nums;min-width:2.4em}
 .grid .row:last-child .sum{color:var(--lantern)}
 
@@ -230,8 +230,50 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
 .app-footer{margin:8px 0 0;text-align:center}
 .app-footer button{background:transparent;border:none;padding:8px 12px;color:var(--dim);font-size:.75rem;font-weight:700;letter-spacing:.04em}
 
+/* ---------- dan stage: stripes, dragon, sensei, sensei mode ---------- */
+.dan rect{display:none}
+body[data-dan="1"] .dan rect:nth-child(-n+1),body[data-dan="2"] .dan rect:nth-child(-n+2),body[data-dan="3"] .dan rect:nth-child(-n+3),body[data-dan="4"] .dan rect:nth-child(-n+4),body[data-dan="5"] .dan rect{display:inline}
+.belt-swatch i{position:absolute;top:0;bottom:0;width:2px;background:var(--ink)}
+.tile-group{display:flex;flex-direction:column;gap:8px}
+.nest{display:grid;grid-template-columns:136px 1fr;gap:14px;align-items:center;width:100%;text-align:left;background:var(--night-2);border:2px solid var(--line);border-radius:16px;padding:10px 14px}
+.nest-pic{height:116px;display:flex;align-items:flex-end;justify-content:center}
+.nest-pic .dragon-svg{width:var(--w,100%)}
+.nest-pic.hop{animation:hop .45s ease}
+.nest-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.nest-txt b{font-family:var(--f-display);font-weight:400;font-size:1.2rem;line-height:1.2;text-wrap:balance}
+.nest-txt small{color:var(--mist);font-weight:700;font-size:.88rem}
+.dragon-svg{display:block;width:100%;height:auto;overflow:visible}
+.dragon-svg.egg{animation:eggwob 3.2s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes eggwob{0%,78%,100%{transform:rotate(0)}82%{transform:rotate(-7deg)}86%{transform:rotate(6deg)}90%{transform:rotate(-3deg)}}
+.wing{transform-box:fill-box;transform-origin:50% 100%}
+.ride{position:fixed;left:0;top:0;width:170px;pointer-events:none;z-index:55}
+.ride .wing{animation:flap .32s ease-in-out infinite alternate}
+@keyframes flap{to{transform:scaleY(.55)}}
+.master-badge .dragon-svg{width:34px}
+.finale .moon .dragon-pic{position:absolute;left:50%;bottom:8px;width:176px;transform:translateX(-50%)}
+.gift{background:var(--night-2);border:3px solid #ffd84a;border-radius:18px;padding:16px;text-align:center;display:flex;flex-direction:column;gap:10px;box-shadow:0 0 30px rgba(255,216,74,.22)}
+.gift .label{color:#ffe9a0}
+.gift-txt{font-family:var(--f-display);font-size:1.5rem;line-height:1.2;margin:0;color:#ffe9a0;text-wrap:balance}
+.cert .print-btn{align-self:center;margin-top:6px;background:transparent;border:2px solid #b9ad92;border-radius:10px;padding:6px 14px;font-weight:700;font-size:.85rem;color:#6b6250}
+.reward-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.reward-row p{margin:0;flex:1 1 100%;font-weight:700}
+.reward-row input{flex:1 1 200px;min-width:0;font:inherit;font-size:16px;color:var(--paper);background:var(--night);border:2px solid var(--line);border-radius:10px;padding:6px 10px;user-select:text;-webkit-user-select:text}
+.reward-row button{background:transparent;border:2px solid var(--line);border-radius:10px;padding:6px 12px;font-weight:700;font-size:.85rem;color:var(--mist)}
+.teach-score{font-size:.92rem;white-space:nowrap}
+.teach-col{display:flex;flex-direction:column;gap:10px}
+.numrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.num{background:var(--night-2);border:2px solid var(--line);border-radius:12px;padding:8px 0;font-family:var(--f-display);font-size:1.3rem;font-variant-numeric:tabular-nums}
+.num[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--lantern);box-shadow:0 0 0 3px var(--lantern-soft)}
+.keypad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.keypad .ans{min-height:64px;font-size:1.9rem}
+.keypad .ok-key{background:var(--bamboo);box-shadow:0 6px 0 var(--bamboo-deep)}
+.slot.typing{border-style:solid;border-color:var(--ink);color:var(--ink)}
+.slot.miss{border:4px solid var(--lantern-deep);background:#ffd9a8;color:var(--ink)}
+
 @media (max-width:420px){
   .hero{grid-template-columns:120px 1fr}
+  .nest{grid-template-columns:112px 1fr}
+  .nest-pic{height:96px}
   .moon{width:120px;height:120px}
   .moon .ninja{width:92px}
   .belt-name{font-size:1.3rem}
@@ -240,6 +282,13 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   .result-head .ninja{width:90px}
   .result-head h2{font-size:1.5rem}
   .stat b{font-size:1.5rem}
+}
+@media print{
+  html,body{background:#fff!important}
+  body *{visibility:hidden}
+  .cert.printing,.cert.printing *{visibility:visible}
+  .cert.printing{position:absolute;left:0;right:0;top:24px;margin:0 auto;max-width:520px;box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cert.printing .print-btn{display:none}
 }
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -259,6 +308,10 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
       <span class="crown-ico"></span>
       <span>Goldener Gürtel · Großmeister<small id="masterSince"></small></span>
     </button>
+    <button type="button" class="master-badge" id="senseiBadge" hidden>
+      <span class="dragon-ico"></span>
+      <span>Sensei · 5. Dan<small id="senseiSince"></small></span>
+    </button>
 
     <div class="hero">
       <div class="moon"><div class="ninja" id="ninjaBig"></div></div>
@@ -270,13 +323,19 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
       </div>
     </div>
 
+    <button type="button" class="nest" id="nest" hidden>
+      <span class="nest-pic" id="nestPic"></span>
+      <span class="nest-txt"><span class="label">Dein Drache</span><b id="nestTitle"></b><small id="nestSub"></small></span>
+    </button>
+
     <div style="display:flex;flex-direction:column;gap:10px">
       <p class="label">Welche Reihen trainierst du?</p>
-      <div class="tiles" id="tiles"></div>
+      <div id="tileGroups" style="display:flex;flex-direction:column;gap:14px"></div>
       <div class="chips">
         <button type="button" class="chip" data-set="2,5,10">Start: 2 · 5 · 10</button>
         <button type="button" class="chip" data-set="3,4,6,7,8,9">Profi: 3 4 6 7 8 9</button>
-        <button type="button" class="chip" data-set="1,2,3,4,5,6,7,8,9,10">Alle Reihen</button>
+        <button type="button" class="chip" data-set="11,12,13,14,15" data-stage="1">Groß: 11 bis 15</button>
+        <button type="button" class="chip" data-set="all">Alle Reihen</button>
       </div>
     </div>
 
@@ -294,9 +353,13 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
         <li>Aufgaben, die noch nicht sitzen, kommen häufiger dran. Tauschaufgaben wie 3 · 7 und 7 · 3 zählen als eine.</li>
         <li>Shuriken (bis zu 3 pro Reihe) zeigen, wie sicher eine Reihe sitzt. Sie wachsen bei Treffern im ersten Versuch. Genug Shuriken bringen den nächsten Gürtel.</li>
         <li>Mit allen 30 Shuriken gibt es den goldenen Gürtel und eine Großmeister-Urkunde. Der bleibt für immer, auch wenn später mal ein Shuriken verloren geht. Nur „Fortschritt zurücksetzen“ löscht ihn.</li>
+        <li>Danach geht es weiter mit dem großen Einmaleins: den 11ern bis 15ern, jeweils mal 1 bis 10. Der Ninja-Trick dafür ist das Zerlegen: 13 · 7 = 10 · 7 + 3 · 7.</li>
+        <li>Statt neuer Gürtel gibt es dort Dan-Streifen am goldenen Gürtel: alle 3 Shuriken einen, bis zum 5. Dan. Mit jedem Dan wächst ein Drache, vom Ei bis zum Flugdrachen. Der Drache schrumpft nie wieder.</li>
+        <li>Mit allen 15 Shuriken der großen Reihen wird er Sensei. Dann stellt er euch im Sensei-Modus Aufgaben, und ihr habt 5 Sekunden pro Antwort. Unten könnt ihr eine geheime Belohnung eintragen, die er erst als Sensei zu sehen bekommt.</li>
         <li>Bewährte Reihenfolge: 2, 5, 10, dann 4 und 3, dann 9, zum Schluss 6, 8 und 7.</li>
         <li>Der Fortschritt bleibt in diesem Browser auf diesem Gerät gespeichert.</li>
       </ul>
+      <div class="reward-row" id="rewardRow"></div>
       <div class="reset-row" id="resetRow">
         <button type="button" id="resetAsk">Fortschritt zurücksetzen</button>
       </div>
@@ -357,7 +420,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
     <div class="gains" id="gains"></div>
     <div class="belt-up" id="beltUp" hidden>
       <h3 id="beltUpTitle"></h3>
-      <p>Dein Ninja trägt ab jetzt die neue Farbe.</p>
+      <p id="beltUpText"></p>
     </div>
     <div class="result-actions">
       <button type="button" class="btn-main" id="againBtn">Nochmal trainieren</button>
@@ -372,6 +435,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
       <h2>Großmeister!</h2>
       <button type="button" class="moon" id="masterMoon" aria-label="Feuerwerk"><span class="ninja" id="ninjaMaster"></span></button>
       <p>Du kannst das ganze kleine Einmaleins. Jede Reihe, jede Aufgabe. Den goldenen Gürtel behältst du für immer.</p>
+      <p>Und es geht weiter: Im Dojo warten die 11er bis 15er und ein geheimnisvolles Ei …</p>
     </div>
     <div class="cert">
       <p class="label">Urkunde</p>
@@ -379,10 +443,76 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
       <input id="masterName" maxlength="24" placeholder="Dein Name" aria-label="Dein Name" autocomplete="off">
       <p>trägt den goldenen Gürtel des Einmaleins-Dojos.</p>
       <p class="date" id="masterDate"></p>
+      <button type="button" class="print-btn">Urkunde drucken</button>
     </div>
     <p class="hint-txt" style="margin:0;text-align:center;color:var(--mist);font-weight:700">Tipp auf den Mond für noch ein Feuerwerk!</p>
     <div class="result-actions">
       <button type="button" class="btn-main" id="masterHome">Zum Dojo</button>
+    </div>
+  </section>
+
+  <!-- ============ SENSEI ============ -->
+  <section class="screen" id="sensei" hidden>
+    <div class="finale">
+      <p class="label">5. Dan · Großes Einmaleins</p>
+      <h2>Sensei!</h2>
+      <button type="button" class="moon" id="senseiMoon" aria-label="Drachenflug"><span class="dragon-pic" id="senseiDragon"></span></button>
+      <p>Du kannst das Einmaleins bis 15. Dein Drache ist ausgewachsen, und den Sensei-Titel behältst du für immer.</p>
+    </div>
+    <div class="gift" id="gift" hidden>
+      <p class="label">Geheime Belohnung</p>
+      <button type="button" class="btn-main" id="giftOpen">Geschenk öffnen</button>
+      <p class="gift-txt" id="giftTxt" hidden></p>
+    </div>
+    <div class="cert">
+      <p class="label">Urkunde</p>
+      <h3>Sensei des Einmaleins</h3>
+      <input id="senseiName" maxlength="24" placeholder="Dein Name" aria-label="Dein Name" autocomplete="off">
+      <p>hat das große Einmaleins gemeistert und trägt den 5. Dan.</p>
+      <p class="date" id="senseiDate"></p>
+      <button type="button" class="print-btn">Urkunde drucken</button>
+    </div>
+    <p class="hint-txt" style="margin:0;text-align:center;color:var(--mist);font-weight:700">Tipp auf den Mond für einen Drachenflug!</p>
+    <div class="result-actions">
+      <button type="button" class="btn-main" id="teachBtn">Sensei-Modus</button>
+      <button type="button" class="btn-ghost" id="senseiHome">Zum Dojo</button>
+    </div>
+  </section>
+
+  <!-- ============ SENSEI-MODUS: er stellt die Aufgabe, die Eltern rechnen ============ -->
+  <section class="screen" id="teach" hidden>
+    <div class="topbar">
+      <button type="button" class="icon-btn" id="teachBack">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        Dojo
+      </button>
+      <span class="points teach-score" id="teachScore"></span>
+      <button type="button" class="icon-btn sound-btn" aria-label="Ton an oder aus"></button>
+    </div>
+    <div class="say">
+      <div class="ninja" id="ninjaTeach"></div>
+      <div class="bubble" id="teachSay" aria-live="polite"></div>
+    </div>
+    <div class="card">
+      <span class="tag" id="teachTag"></span>
+      <div class="eq" id="teachEq"></div>
+    </div>
+    <div class="teach-col" id="teachPick">
+      <p class="label">Erste Zahl</p>
+      <div class="numrow" id="pickA"></div>
+      <p class="label">Zweite Zahl</p>
+      <div class="numrow" id="pickB"></div>
+      <div class="result-actions">
+        <button type="button" class="btn-ghost" id="teachRand">Zufall</button>
+        <button type="button" class="btn-main" id="teachGo">Aufgabe stellen</button>
+      </div>
+    </div>
+    <div class="teach-col" id="teachReady" hidden>
+      <button type="button" class="btn-main" id="teachLos">Los!</button>
+    </div>
+    <div class="keypad" id="teachAnswer" hidden></div>
+    <div class="teach-col" id="teachJudge" hidden>
+      <button type="button" class="btn-main" id="teachNext">Nächste Aufgabe</button>
     </div>
   </section>
 
@@ -403,9 +533,8 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   let selected = store.get('dojo.sel', [2,5,10]);
   if (!Array.isArray(selected) || !selected.length) selected = [2,5,10];
   let muted = !!store.get('dojo.muted', false);
-  let master = store.get('dojo.master', null);   // {date, name}: set once all 30 shuriken are reached, never lost by mistakes
 
-  const VERSION = '1.2.5';
+  const VERSION = '1.3.0';
 
   // No zooming: iOS ignores user-scalable=no, so also block pinch gestures (double-tap zoom is off via touch-action).
   ['gesturestart','gesturechange','gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive:false }));
@@ -420,29 +549,47 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   });
 
   const BELTS = [
-    {min:0,  name:'Weißer',    dat:'weißen',    color:'#f5f3ea', edge:'#bdb8a6'},
-    {min:3,  name:'Gelber',    dat:'gelben',    color:'#ffd84a', edge:'#c9a21f'},
-    {min:7,  name:'Oranger',   dat:'orangen',   color:'#ff9a3c', edge:'#c46a17'},
-    {min:12, name:'Grüner',    dat:'grünen',    color:'#4fc276', edge:'#2f8a4f'},
-    {min:17, name:'Blauer',    dat:'blauen',    color:'#4f8dff', edge:'#2c5fc0'},
-    {min:22, name:'Brauner',   dat:'braunen',   color:'#9a6440', edge:'#6b4027'},
-    {min:27, name:'Schwarzer', dat:'schwarzen', color:'#121214', edge:'#e9e1cc'},
-    {min:30, name:'Goldener',  dat:'goldenen',  color:'#e8b923', edge:'#fff1a8'},
+    {min:0,  title:'Weißer Gürtel',    to:'weißen Gürtel',    color:'#f5f3ea', edge:'#bdb8a6'},
+    {min:3,  title:'Gelber Gürtel',    to:'gelben Gürtel',    color:'#ffd84a', edge:'#c9a21f'},
+    {min:7,  title:'Oranger Gürtel',   to:'orangen Gürtel',   color:'#ff9a3c', edge:'#c46a17'},
+    {min:12, title:'Grüner Gürtel',    to:'grünen Gürtel',    color:'#4fc276', edge:'#2f8a4f'},
+    {min:17, title:'Blauer Gürtel',    to:'blauen Gürtel',    color:'#4f8dff', edge:'#2c5fc0'},
+    {min:22, title:'Brauner Gürtel',   to:'braunen Gürtel',   color:'#9a6440', edge:'#6b4027'},
+    {min:27, title:'Schwarzer Gürtel', to:'schwarzen Gürtel', color:'#121214', edge:'#e9e1cc'},
+    {min:30, title:'Goldener Gürtel',  to:'goldenen Gürtel',  color:'#e8b923', edge:'#fff1a8'},
   ];
-  const GOLD = BELTS[BELTS.length-1];
+  // The golden belt stays; every 3 shuriken from the 11er–15er rows add a stripe.
+  const DANS = [0,1,2,3,4,5].map(n => ({ min: n*3, stripes: n, color:'#e8b923', edge:'#fff1a8',
+    title: n === 0 ? 'Goldener Gürtel' : n === 5 ? 'Sensei · 5. Dan' : `${n}. Dan`, to: `${n}. Dan` }));
+
+  // Stages unlock one after another. Each has its rows (each × 1 to 10), ranks by shuriken, and a finale kept for good.
+  // To add a stage: append it here and give it a finale screen in showFinale().
+  const STAGES = [
+    { key:'dojo.master', rows:[1,2,3,4,5,6,7,8,9,10], ranks:BELTS, doneText:'Großmeister! Das ganze Einmaleins sitzt.',
+      up: r => `Neuer Gürtel: ${r.title}!`, upText:'Dein Ninja trägt ab jetzt die neue Farbe.' },
+    { key:'dojo.sensei', rows:[11,12,13,14,15], ranks:DANS, label:'Großes Einmaleins · Dan', doneText:'Sensei! Das Einmaleins bis 15 sitzt.',
+      up: r => `Neuer Streifen: ${r.title}!`, upText:'Dein Ninja hat einen neuen Streifen am Gürtel.' },
+  ];
+  STAGES.forEach(st => {
+    st.products = [...new Set(st.rows.flatMap(r => Array.from({length:10}, (_,i) => r*(i+1))))];
+    st.max = Math.max(...st.products);
+  });
+  const stageOf = r => STAGES.findIndex(st => st.rows.includes(r));
+  let done = STAGES.map(st => store.get(st.key, null));   // per stage {date, name}: set once its last rank is reached, never lost by mistakes
+  let dragon = store.get('dojo.dragon', 0);                // dragon growth, 0 (egg) to 5; only ever grows
 
   /* ---------- svg bits ---------- */
   const SHU = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4 Z"/><circle cx="12" cy="12" r="2.4" fill="var(--night)"/></svg>';
   const SHU_STAR = c => `<svg viewBox="0 0 24 24" class="${c}" aria-hidden="true"><path fill="currentColor" d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4 Z"/></svg>`;
   const LANTERN = '<svg viewBox="0 0 24 38" aria-hidden="true"><line x1="12" y1="0" x2="12" y2="5" stroke="var(--line)" stroke-width="1.5"/><rect x="7" y="4" width="10" height="3.5" rx="1.2" fill="var(--cap)"/><ellipse class="lb" cx="12" cy="18" rx="10" ry="11.5"/><path d="M12 7 v22 M6.5 9.5 q-3.5 8.5 0 17 M17.5 9.5 q3.5 8.5 0 17" stroke="rgba(0,0,0,.2)" stroke-width="1.2" fill="none"/><rect x="7" y="28.5" width="10" height="3.5" rx="1.2" fill="var(--cap)"/><line class="tassel" x1="12" y1="32" x2="12" y2="37.5" stroke-width="2" stroke-linecap="round"/></svg>';
-  const NINJA = `<svg viewBox="0 0 100 120" class="ninja-svg" aria-hidden="true">
-    <ellipse cx="50" cy="114" rx="28" ry="5" fill="rgba(0,0,0,.3)"/>
+  const NINJA_BODY = `
     <path d="M71 24 C80 18 88 20 96 14 C93 24 85 28 74 30 Z" fill="var(--band)"/>
     <path d="M71 28 C80 30 87 36 92 44 C85 40 78 37 72 34 Z" fill="var(--band)"/>
     <ellipse cx="21" cy="80" rx="7.5" ry="13" transform="rotate(16 21 80)" fill="var(--suit)" stroke="var(--suit-edge)" stroke-width="2"/>
     <ellipse cx="79" cy="80" rx="7.5" ry="13" transform="rotate(-16 79 80)" fill="var(--suit)" stroke="var(--suit-edge)" stroke-width="2"/>
     <rect x="24" y="60" width="52" height="50" rx="18" fill="var(--suit)" stroke="var(--suit-edge)" stroke-width="2"/>
     <rect x="25" y="83" width="50" height="8" fill="var(--belt)" stroke="var(--belt-edge)" stroke-width="1.5"/>
+    <g class="dan" fill="#1c1a2b"><rect x="58" y="84.5" width="2" height="5"/><rect x="61.5" y="84.5" width="2" height="5"/><rect x="65" y="84.5" width="2" height="5"/><rect x="68.5" y="84.5" width="2" height="5"/><rect x="72" y="84.5" width="2" height="5"/></g>
     <path d="M48 89 L42 103 L47 102 Z M52 89 L58 103 L53 102 Z" fill="var(--belt)" stroke="var(--belt-edge)" stroke-width="1.2" stroke-linejoin="round"/>
     <rect x="44.5" y="81.5" width="11" height="11" rx="3" fill="var(--belt)" stroke="var(--belt-edge)" stroke-width="1.5"/>
     <circle cx="50" cy="40" r="28" fill="var(--suit)" stroke="var(--suit-edge)" stroke-width="2"/>
@@ -452,8 +599,36 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
     <ellipse class="eye" cx="41" cy="41.5" rx="3.4" ry="4.3" fill="#1c1a2b"/>
     <ellipse class="eye" cx="59" cy="41.5" rx="3.4" ry="4.3" fill="#1c1a2b"/>
     <circle cx="42.3" cy="40" r="1.2" fill="#fff"/>
-    <circle cx="60.3" cy="40" r="1.2" fill="#fff"/>
-  </svg>`;
+    <circle cx="60.3" cy="40" r="1.2" fill="#fff"/>`;
+  const NINJA = `<svg viewBox="0 0 100 120" class="ninja-svg" aria-hidden="true"><ellipse cx="50" cy="114" rx="28" ry="5" fill="rgba(0,0,0,.3)"/>${NINJA_BODY}</svg>`;
+  // Dragon of the Dan stage, from egg (0) to full size (5). With a rider, the ninja sits on its back.
+  function dragonSVG(g, rider=false){
+    if (g <= 0) return `<svg viewBox="28 16 64 82" class="dragon-svg egg" aria-hidden="true">
+      <ellipse cx="60" cy="94" rx="20" ry="3.5" fill="rgba(0,0,0,.3)"/>
+      <path d="M60 20 C77 20 86 48 86 66 C86 83 75 93 60 93 C45 93 34 83 34 66 C34 48 43 20 60 20 Z" fill="#f5eddc" stroke="#d8cdb3" stroke-width="2"/>
+      <g fill="#6fd0a0"><circle cx="52" cy="44" r="5"/><circle cx="70" cy="56" r="6.5"/><circle cx="49" cy="72" r="4.5"/><circle cx="69" cy="80" r="3.5"/><circle cx="62" cy="31" r="3"/></g>
+    </svg>`;
+    const G = '#6fd0a0', D = '#3d9a6c', wing = [0,0,0,.6,.85,1.15][g];
+    const line = `stroke="${D}" stroke-width="2" stroke-linejoin="round"`;
+    return `<svg viewBox="0 0 120 100" class="dragon-svg" aria-hidden="true">
+      <ellipse cx="58" cy="94" rx="${18+g*3}" ry="4" fill="rgba(0,0,0,.3)"/>
+      ${wing ? `<g class="wing"><g transform="translate(56 54) scale(${wing}) translate(-56 -54)"><path d="M64 54 C60 34 46 18 20 10 C27 20 28 27 25 34 C33 32 38 36 37 43 C44 41 49 46 48 56 Z" fill="${D}" ${line}/><path d="M61 52 C54 40 40 24 21 11 M60 53 L26 34 M58 54 L38 43" stroke="${G}" stroke-width="1.5" fill="none" stroke-linecap="round"/></g></g>` : ''}
+      ${g >= 2 ? `<path d="M36 72 C22 76 12 70 10 58 C16 64 24 66 34 62 Z" fill="${G}" ${line}/><path d="M10 58 L3 48 L15 52 Z" fill="${D}" ${line}/>` : ''}
+      ${g >= 4 ? '<path d="M34 61 L35 51 L42 57 Z M41 55 L44 45 L50 53 Z M49 52 L54 42 L58 51 Z" fill="#ffb24a"/>' : ''}
+      <ellipse cx="44" cy="86" rx="7" ry="5.5" fill="${G}" ${line}/><ellipse cx="68" cy="86" rx="7" ry="5.5" fill="${G}" ${line}/>
+      <ellipse cx="56" cy="68" rx="24" ry="18" fill="${G}" ${line}/>
+      <ellipse cx="62" cy="72" rx="13" ry="11" fill="#e9f2c4"/>
+      <path d="M53 68 h18 M52 74 h20 M55 80 h14" stroke="#c9d99a" stroke-width="1.5"/>
+      ${rider ? `<svg x="37" y="28" width="30" height="36" viewBox="0 0 100 120">${NINJA_BODY}</svg>` : ''}
+      ${g >= 2 ? `<path d="M70 33 L65 ${22-g} L76 29 Z M80 29 L82 ${16-g} L88 30 Z" fill="#f5eddc" stroke="#d8cdb3" stroke-width="1.5" stroke-linejoin="round"/>` : ''}
+      <circle cx="80" cy="44" r="16" fill="${G}" ${line}/>
+      <ellipse cx="95" cy="50" rx="12" ry="9" fill="${G}" ${line}/>
+      <circle cx="101" cy="47" r="1.5" fill="${D}"/><path d="M89 55 q5 3 11 0" stroke="${D}" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <ellipse cx="86" cy="50" rx="3" ry="2" fill="rgba(255,140,140,.5)"/>
+      <ellipse cx="80" cy="41" rx="3.6" ry="4.4" fill="#1c1a2b"/><circle cx="81.3" cy="39.5" r="1.3" fill="#fff"/>
+      ${g === 1 ? '<path d="M30 74 L37 66 L44 74 L51 66 L58 74 L65 66 L72 74 L79 66 L86 74 C86 88 76 96 58 96 C40 96 30 88 30 74 Z" fill="#f5eddc" stroke="#d8cdb3" stroke-width="2" stroke-linejoin="round"/><g fill="#6fd0a0"><circle cx="44" cy="84" r="3.5"/><circle cx="70" cy="86" r="4.5"/></g>' : ''}
+    </svg>`;
+  }
   $$('.ninja').forEach(n => n.innerHTML = NINJA);
   $$('.shu-ico').forEach(n => { n.innerHTML = SHU; n.style.display='inline-flex'; n.style.width='20px'; n.style.color='var(--lantern)'; });
 
@@ -497,25 +672,39 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   // Fractional shuriken (0–3) so progress shows before a whole shuriken is earned.
   function rowProgress(r){ return Math.min(3, rowSum(r)/9); }
   function nextFrac(r){ const p = rowProgress(r); return p >= 3 ? 1 : p - Math.floor(p); }
-  function totalStars(){ let t = 0; for (let r=1;r<=10;r++) t += starsFor(r); return t; }
-  function beltFor(t){ if (master) return GOLD; let b = BELTS[0]; for (const x of BELTS) if (t >= x.min) b = x; return b; }
-  function applyBelt(b){
-    const s = document.documentElement.style; s.setProperty('--belt', b.color); s.setProperty('--belt-edge', b.edge);
-    document.body.classList.toggle('master', !!master);
+  const stageStars = i => STAGES[i].rows.reduce((t,r) => t + starsFor(r), 0);
+  const stageProg = i => STAGES[i].rows.reduce((t,r) => t + rowProgress(r), 0);
+  const unlocked = i => i === 0 || !!done[i-1];
+  // The stage being worked on: the first one not finished yet, or the last one once all are.
+  function activeStage(){ const i = done.findIndex(d => !d); return i < 0 ? STAGES.length-1 : i; }
+  function rankIdx(i){
+    const ranks = STAGES[i].ranks; if (done[i]) return ranks.length-1;
+    const t = stageStars(i); let k = 0; ranks.forEach((r,j) => { if (t >= r.min) k = j; }); return k;
+  }
+  function applyBelt(){
+    const a = activeStage(), b = STAGES[a].ranks[rankIdx(a)], s = document.documentElement.style;
+    s.setProperty('--belt', b.color); s.setProperty('--belt-edge', b.edge);
+    document.body.classList.toggle('master', !!done[0]);
+    document.body.dataset.dan = b.stripes || 0;
+    $('.belt-swatch').innerHTML = Array.from({length: b.stripes || 0}, (_,i) => `<i style="right:${3+i*4}px"></i>`).join('');
+    return b;
+  }
+  function growDragon(){
+    const g = done[1] ? 5 : done[0] ? rankIdx(1) : 0;
+    if (g <= dragon) return false;
+    dragon = g; store.set('dojo.dragon', g); return true;
   }
 
   const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
   const pickOne = a => a[Math.floor(Math.random()*a.length)];
 
-  const PRODUCTS = [...new Set(Array.from({length:100},(_,i)=>(Math.floor(i/10)+1)*(i%10+1)))];
-
   // Distractors: neighbour tasks first (one factor off by one), then nearby results from the table.
   function makeOptions(r,k){
-    const c = r*k, used = new Set([c]), picks = [];
-    const ok = v => Number.isInteger(v) && v > 0 && v <= 100 && !used.has(v);
+    const st = STAGES[stageOf(r)], c = r*k, used = new Set([c]), picks = [];
+    const ok = v => Number.isInteger(v) && v > 0 && v <= st.max && !used.has(v);
     const add = v => { used.add(v); picks.push(v); };
     for (const v of shuffle([r*(k-1), r*(k+1), (r-1)*k, (r+1)*k])) { if (picks.length >= 2) break; if (ok(v)) add(v); }
-    const near = PRODUCTS.filter(p => p !== c).sort((x,y) => Math.abs(x-c) - Math.abs(y-c)).slice(0,5);
+    const near = st.products.filter(p => p !== c).sort((x,y) => Math.abs(x-c) - Math.abs(y-c)).slice(0,5);
     for (const v of shuffle(near)) { if (picks.length >= 3) break; if (ok(v)) add(v); }
     for (const v of near) { if (picks.length >= 3) break; if (ok(v)) add(v); }
     let d = 1; while (picks.length < 3) { for (const v of [c+d, c-d]) if (picks.length < 3 && ok(v)) add(v); d++; }
@@ -523,10 +712,12 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   }
 
   // Strategy hint: m groups of n. Pick the factor that gives the easiest strategy as m.
+  // Factors above 10 are split into 10 + rest (13 · 7 = 10 · 7 + 3 · 7); only 1, 2, 10 and 5 are easier.
   const PRI = [1,2,10,5,9,4,3,6,8,7];
+  const pri = x => x > 10 ? 3.5 : PRI.indexOf(x);
   function trick(a,b){
     let m, n;
-    if (PRI.indexOf(a) <= PRI.indexOf(b)) { m=a; n=b; } else { m=b; n=a; }
+    if (pri(a) <= pri(b)) { m=a; n=b; } else { m=b; n=a; }
     const T = {
       1: `1 · ${n} ist einfach ${n}.`,
       2: `Verdopple die ${n}. Also ${n} + ${n}.`,
@@ -539,12 +730,17 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
       7: `5 · ${n} = ${5*n}. Dann noch 2 · ${n} = ${2*n} dazu.`,
       8: `10 · ${n} = ${10*n}. Dann 2 · ${n} = ${2*n} wegnehmen.`
     };
+    if (m > 10){
+      const e = m - 10;
+      return { m, n, split: 10, text: `Zerlege die ${m} in 10 + ${e}. Rechne 10 · ${n} = ${10*n}. Dann noch ${e === 1 ? 'einmal ' + n : `${e} · ${n} = ${e*n}`} dazu.` };
+    }
     const split = {3:2, 4:2, 6:5, 7:5, 8:5, 9:5}[m] || 0;
     return { m, n, text: T[m], split };
   }
 
   /* ---------- round ---------- */
   let round = null;
+  let advanceTimer = 0;   // pending move to the next question; cleared when the round is left or restarted
   const MSG = {
     intro: ['Welche Zahl trifft?','Ziel anvisieren …','Konzentrier dich, Ninja.','Du schaffst das.','Ruhig atmen. Dann werfen.'],
     ok: ['Treffer!','Volltreffer!','Lautlos und schnell!','Wie ein Schatten!','Genau ins Ziel!','Ninja-Blick!'],
@@ -573,7 +769,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
     return out.map(c => makeItem(c.r, c.k, true));
   }
 
-  function show(id){ ['dojo','game','result','master'].forEach(s => $('#'+s).hidden = s !== id); window.scrollTo(0,0); }
+  function show(id){ ['dojo','game','result','master','sensei','teach'].forEach(s => $('#'+s).hidden = s !== id); window.scrollTo(0,0); }
 
   function renderLanterns(el, lit, popIdx=-1){
     el.innerHTML = '';
@@ -586,15 +782,16 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   }
 
   function say(t){ $('#bubble').textContent = t; }
-  function ninjaAnim(cls){
-    const n = $('#ninjaSmall'); n.classList.remove('hop','think'); void n.offsetWidth; n.classList.add(cls);
+  function ninjaAnim(cls, sel='#ninjaSmall'){
+    const n = $(sel); n.classList.remove('hop','think'); void n.offsetWidth; n.classList.add(cls);
   }
 
   function startRound(){
-    const total = totalStars();
+    clearTimeout(advanceTimer);
+    const stage = activeStage();
     round = {
       queue: buildRound(), idx: 0, lit: 0, points: 0, comebacks: 0, clean: 0, repeats: 0,
-      beltBefore: beltFor(total),
+      stage, rankBefore: rankIdx(stage),
       starsBefore: Object.fromEntries(selected.map(r => [r, starsFor(r)])),
       progBefore: Object.fromEntries(selected.map(r => [r, rowProgress(r)]))
     };
@@ -659,10 +856,11 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
       if (it.base){
         const target = $('#lanterns').children[round.lit];
         round.lit++;
-        throwShuriken(target, () => { renderLanterns($('#lanterns'), round.lit, round.lit-1); sfx.hit(); });
+        const rd = round;
+        throwShuriken(target, () => { if (round !== rd) return; renderLanterns($('#lanterns'), round.lit, round.lit-1); sfx.hit(); });
       }
       const wait = first ? 1200 : 2000;
-      setTimeout(() => { round.idx++; nextQuestion(); }, reduce ? Math.min(wait, 1100) : wait);
+      advanceTimer = setTimeout(() => { round.idx++; nextQuestion(); }, reduce ? Math.min(wait, 1100) : wait);
     } else {
       it.tries++;
       btn.disabled = true; btn.classList.add('tried','wobble');
@@ -732,14 +930,15 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   }
 
   function finish(){
-    const total = totalStars();
-    const newMaster = checkMaster();
-    const after = beltFor(total);
+    const a = round.stage;
+    const newDone = checkFinish();
+    const grew = growDragon();
+    const ri = rankIdx(a);
     $('#sPts').textContent = round.points;
     $('#sClean').textContent = round.clean;
     $('#sCome').textContent = round.comebacks;
     renderLanterns($('#lanternsEnd'), 10);
-    applyBelt(after);
+    applyBelt();
     const errs = round.repeats;
     $('#resTitle').textContent = 'Alle Laternen brennen!';
     $('#resSub').textContent = round.clean >= 9 ? 'Was für ein Wurf. Du bist ein Schatten-Ninja.' : 'Starkes Training. Jede Runde macht dich schneller.';
@@ -759,40 +958,90 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
         : `nächstes Shuriken zu ${Math.round(nextFrac(g.r)*100)} %`;
       return `<div class="gain">${SHU}<span>${g.r}er-Reihe: ${txt}</span></div>`;
     }).join('');
-    const up = after.min > round.beltBefore.min;
+    const up = ri > round.rankBefore;
     $('#beltUp').hidden = !up;
-    if (up) $('#beltUpTitle').textContent = `Neuer Gürtel: ${after.name} Gürtel!`;
-    if (newMaster){ showMaster(); return; }
+    if (up){
+      $('#beltUpTitle').textContent = STAGES[a].up(STAGES[a].ranks[ri]);
+      $('#beltUpText').textContent = STAGES[a].upText + (grew ? (dragon === 1 ? ' Und dein Drache ist geschlüpft!' : ' Und dein Drache ist gewachsen!') : '');
+    }
+    if (newDone >= 0){ showFinale(newDone); return; }
     show('result');
     sfx.win();
   }
 
-  /* ---------- grandmaster ---------- */
-  // Award the golden belt the moment all 30 shuriken are reached: at round end, on leaving a round early, or on app start.
-  function checkMaster(){
-    if (master || totalStars() < GOLD.min) return false;
-    master = { date: new Date().toISOString(), name: '' };
-    store.set('dojo.master', master);
-    return true;
+  /* ---------- grandmaster & sensei ---------- */
+  // Finish a stage the moment its last rank is reached: at round end, on leaving a round early, or on app start.
+  // Returns the index of the stage just finished, or -1.
+  function checkFinish(){
+    for (let i = 0; i < STAGES.length; i++){
+      const st = STAGES[i];
+      if (done[i] || !unlocked(i) || stageStars(i) < st.ranks[st.ranks.length-1].min) continue;
+      done[i] = { date: new Date().toISOString(), name: i ? done[i-1].name || '' : '' };
+      store.set(st.key, done[i]);
+      return i;
+    }
+    return -1;
   }
+  const showFinale = i => [showMaster, showSensei][i]();
   const CROWN = '<svg viewBox="0 0 30 24" aria-hidden="true"><path d="M2 21 L4 5 L10 12 L15 2 L20 12 L26 5 L28 21 Z" fill="#ffd84a" stroke="#c9a21f" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   $$('.crown-ico').forEach(n => n.innerHTML = CROWN);
+  $$('.dragon-ico').forEach(n => n.innerHTML = dragonSVG(5));
+  $('#senseiDragon').innerHTML = dragonSVG(5, true);
   const fmtDate = iso => new Date(iso).toLocaleDateString('de-DE', { day:'numeric', month:'long', year:'numeric' });
 
   function showMaster(){
-    $('#masterDate').textContent = `Erreicht am ${fmtDate(master.date)}`;
-    $('#masterName').value = master.name || '';
+    $('#masterDate').textContent = `Erreicht am ${fmtDate(done[0].date)}`;
+    $('#masterName').value = done[0].name || '';
     show('master');
     sfx.fanfare();
     fireworks(5000);
   }
-  $('#masterName').addEventListener('input', e => { master.name = e.target.value.trim(); store.set('dojo.master', master); });
+  $('#masterName').addEventListener('input', e => { done[0].name = e.target.value.trim(); store.set(STAGES[0].key, done[0]); });
   $('#masterMoon').addEventListener('click', () => {
     const n = $('#ninjaMaster'); n.classList.remove('hop'); void n.offsetWidth; n.classList.add('hop');
     fireworks(2500);
   });
   $('#masterHome').addEventListener('click', () => { renderDojo(); show('dojo'); });
   $('#masterBadge').addEventListener('click', showMaster);
+
+  function showSensei(){
+    const s = done[1], reward = store.get('dojo.reward', '');
+    $('#senseiDate').textContent = `Erreicht am ${fmtDate(s.date)}`;
+    $('#senseiName').value = s.name || '';
+    $('#gift').hidden = !reward;
+    $('#giftOpen').hidden = !!s.opened;
+    $('#giftTxt').hidden = !s.opened;
+    $('#giftTxt').textContent = reward;
+    show('sensei');
+    sfx.fanfare();
+    fireworks(5000);
+    setTimeout(ride, 700);
+  }
+  $('#senseiName').addEventListener('input', e => { done[1].name = e.target.value.trim(); store.set(STAGES[1].key, done[1]); });
+  $('#senseiMoon').addEventListener('click', () => { ride(); fireworks(2500); });
+  $('#giftOpen').addEventListener('click', () => {
+    done[1].opened = true; store.set(STAGES[1].key, done[1]);
+    $('#giftOpen').hidden = true; $('#giftTxt').hidden = false;
+    sfx.fanfare(); fireworks(3000);
+  });
+  $('#senseiHome').addEventListener('click', () => { renderDojo(); show('dojo'); });
+  $('#senseiBadge').addEventListener('click', showSensei);
+  $$('.print-btn').forEach(b => b.addEventListener('click', () => { b.closest('.cert').classList.add('printing'); window.print(); }));
+  addEventListener('afterprint', () => $$('.cert.printing').forEach(c => c.classList.remove('printing')));
+
+  // The grown dragon flies across the screen with the ninja on its back.
+  function ride(){
+    if (reduce) return;
+    const el = document.createElement('div'); el.className = 'ride'; el.innerHTML = dragonSVG(5, true);
+    document.body.appendChild(el);
+    const W = innerWidth, H = innerHeight, kf = [];
+    for (let i=0;i<=8;i++){
+      const t = i/8;
+      kf.push({ transform:`translate(${-190 + t*(W+210)}px,${H*(.45 - .25*t) + Math.sin(t*Math.PI*3)*18}px) rotate(${Math.cos(t*Math.PI*3)*-5}deg)` });
+    }
+    el.animate(kf, { duration: 4200, easing:'ease-in-out', fill:'forwards' }).onfinish = () => el.remove();
+    sfx.win();
+  }
 
   function fireworks(ms){
     if (reduce) return;
@@ -831,9 +1080,100 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
     requestAnimationFrame(frame);
   }
 
+  /* ---------- sensei mode: he sets a task, the parents answer against the clock ---------- */
+  const TEACH_LIMIT = 5;
+  const teach = { a:0, b:0, typed:'', t0:0, tick:0, sensei:0, parents:0 };
+  const fmtSec = s => s.toFixed(1).replace('.', ',');
+  const teachSay = t => { $('#teachSay').textContent = t; };
+  function teachEq(a, b, res){ $('#teachEq').innerHTML = `<span>${a}</span><span class="op">·</span><span>${b}</span><span class="op">=</span>${res}`; }
+  function teachPhase(p){ ['Pick','Ready','Answer','Judge'].forEach(x => $('#teach'+x).hidden = x !== p); }
+  function teachScore(){ $('#teachScore').textContent = `Sensei ${teach.sensei}:${teach.parents} Eltern`; }
+  [['#pickA',15,'a'], ['#pickB',10,'b']].forEach(([sel, max, f]) => {
+    for (let i=1;i<=max;i++){
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'num'; b.textContent = i;
+      b.addEventListener('click', () => { teach[f] = i; renderPick(); });
+      $(sel).appendChild(b);
+    }
+  });
+  ['1','2','3','4','5','6','7','8','9','⌫','0','OK'].forEach(k => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'ans' + (k === 'OK' ? ' ok-key' : ''); b.textContent = k;
+    b.addEventListener('click', () => {
+      if (k === 'OK'){ if (teach.typed) judgeTeach(); return; }
+      teach.typed = k === '⌫' ? teach.typed.slice(0,-1) : (teach.typed + k).slice(0,3);
+      teachTyped();
+    });
+    $('#teachAnswer').appendChild(b);
+  });
+  function renderPick(){
+    $$('#pickA .num').forEach((b,i) => b.setAttribute('aria-pressed', i+1 === teach.a));
+    $$('#pickB .num').forEach((b,i) => b.setAttribute('aria-pressed', i+1 === teach.b));
+    teachEq(teach.a || '?', teach.b || '?', '<span class="slot">?</span>');
+    $('#teachGo').disabled = !(teach.a && teach.b);
+  }
+  function teachPick(){
+    teach.a = teach.b = 0;
+    teachPhase('Pick'); $('#teachTag').textContent = 'Sensei stellt die Aufgabe';
+    teachSay('Stell deinen Eltern eine Aufgabe!');
+    renderPick();
+  }
+  function teachTyped(){ teachEq(teach.a, teach.b, `<span class="slot typing">${teach.typed || '?'}</span>`); }
+  function startTeach(){ clearInterval(teach.tick); teach.sensei = teach.parents = 0; teachScore(); teachPick(); show('teach'); }
+  function judgeTeach(){
+    clearInterval(teach.tick);
+    const sec = (performance.now() - teach.t0) / 1000, ans = teach.a * teach.b, right = +teach.typed === ans;
+    $('#teachTag').textContent = `${fmtSec(sec)} s`;
+    teachEq(teach.a, teach.b, `<span class="slot ${right ? 'filled' : 'miss'}">${ans}</span>`);
+    if (right && sec <= TEACH_LIMIT){
+      teach.parents++; teachSay(`Richtig in ${fmtSec(sec)} Sekunden. Punkt für die Eltern!`);
+      ninjaAnim('think', '#ninjaTeach'); sfx.soft();
+    } else {
+      teach.sensei++;
+      teachSay(right ? `Richtig, aber ${fmtSec(sec)} Sekunden. Zu langsam! Punkt für den Sensei!` : `${teach.typed} ist falsch! Punkt für den Sensei!`);
+      ninjaAnim('hop', '#ninjaTeach'); sfx.win();
+    }
+    teachScore(); teachPhase('Judge');
+  }
+  $('#teachRand').addEventListener('click', () => { teach.a = 2 + Math.floor(Math.random()*14); teach.b = 2 + Math.floor(Math.random()*8); renderPick(); });
+  $('#teachGo').addEventListener('click', () => {
+    teachPhase('Ready'); teachEq('?', '?', '<span class="slot">?</span>');
+    $('#teachTag').textContent = 'Eltern sind dran';
+    teachSay('Jetzt sind deine Eltern dran. Sie tippen auf „Los!“');
+  });
+  $('#teachLos').addEventListener('click', () => {
+    teach.typed = ''; teachPhase('Answer'); teachTyped();
+    teachSay(`Na? Ihr habt ${TEACH_LIMIT} Sekunden!`);
+    teach.t0 = performance.now();
+    const upd = () => { $('#teachTag').textContent = `${fmtSec((performance.now() - teach.t0) / 1000)} s`; };
+    upd(); clearInterval(teach.tick); teach.tick = setInterval(upd, 100);
+  });
+  $('#teachNext').addEventListener('click', teachPick);
+  $('#teachBack').addEventListener('click', () => { clearInterval(teach.tick); renderDojo(); show('dojo'); });
+  $('#teachBtn').addEventListener('click', startTeach);
+
   /* ---------- dojo ---------- */
-  const tiles = $('#tiles');
-  for (let r=1;r<=10;r++){
+  const NEST = [
+    ['Ein Drachen-Ei!', 'Es schlüpft beim 1. Dan. Trainiere die 11er bis 15er.'],
+    ['Dein Drache ist geschlüpft!', 'Beim 2. Dan wird er größer.'],
+    ['Dein Drache wächst.', 'Beim 3. Dan bekommt er Flügel.'],
+    ['Er hat Flügel!', 'Beim 4. Dan wird er stark.'],
+    ['Fast ausgewachsen.', 'Beim 5. Dan kann er fliegen.'],
+    ['Dein Drache ist ausgewachsen!', 'Tipp ihn an, dann fliegt ihr los.'],
+  ];
+  $('#nest').addEventListener('click', () => {
+    if (dragon >= 5){ ride(); return; }
+    const n = $('#nestPic'); n.classList.remove('hop'); void n.offsetWidth; n.classList.add('hop'); sfx.ok();
+  });
+
+  STAGES.forEach((st, i) => {
+    const group = document.createElement('div');
+    group.className = 'tile-group'; group.dataset.stage = i;
+    group.innerHTML = (st.label ? `<p class="label">${st.label}</p>` : '') + '<div class="tiles"></div>';
+    for (const r of st.rows) group.querySelector('.tiles').appendChild(makeTile(r));
+    $('#tileGroups').appendChild(group);
+  });
+  function makeTile(r){
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'tile'; b.dataset.r = r;
     b.innerHTML = `<span class="n">${r}</span><span class="er">${r}er</span><span class="stars"></span><span class="prog" aria-hidden="true"><i></i></span>`;
@@ -841,26 +1181,37 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
       selected = selected.includes(r) ? selected.filter(x => x !== r) : [...selected, r].sort((x,y)=>x-y);
       store.set('dojo.sel', selected); renderDojo();
     });
-    tiles.appendChild(b);
+    return b;
   }
   $$('.chip').forEach(c => c.addEventListener('click', () => {
-    selected = c.dataset.set.split(',').map(Number); store.set('dojo.sel', selected); renderDojo();
+    selected = c.dataset.set === 'all'
+      ? STAGES.flatMap((st,i) => unlocked(i) ? st.rows : [])
+      : c.dataset.set.split(',').map(Number);
+    store.set('dojo.sel', selected); renderDojo();
   }));
 
   function renderDojo(){
-    const total = totalStars(), b = beltFor(total); applyBelt(b);
-    $('#beltName').textContent = b.name + ' Gürtel';
-    $('#masterBadge').hidden = !master;
-    if (master) $('#masterSince').textContent = `seit ${fmtDate(master.date)}${master.name ? ' · ' + master.name : ''} · Urkunde ansehen`;
-    const ni = BELTS.indexOf(b) + 1;
-    if (ni < BELTS.length){
-      const nb = BELTS[ni], need = nb.min - total;
-      $('#beltNext').textContent = `Noch ${need} Shuriken bis zum ${nb.dat} Gürtel`;
-      let prog = 0; for (let r=1;r<=10;r++) prog += rowProgress(r);
-      $('#beltFill').style.width = (Math.max(0, Math.min(1, (prog - b.min) / (nb.min - b.min))) * 100) + '%';
+    growDragon();
+    const a = activeStage(), st = STAGES[a], ri = rankIdx(a), b = applyBelt();
+    $('#beltName').textContent = b.title;
+    $('#masterBadge').hidden = !done[0];
+    if (done[0]) $('#masterSince').textContent = `seit ${fmtDate(done[0].date)}${done[0].name ? ' · ' + done[0].name : ''} · Urkunde ansehen`;
+    $('#senseiBadge').hidden = !done[1];
+    if (done[1]) $('#senseiSince').textContent = `seit ${fmtDate(done[1].date)} · Urkunde und Sensei-Modus`;
+    if (ri < st.ranks.length-1){
+      const nb = st.ranks[ri+1], need = nb.min - stageStars(a);
+      $('#beltNext').textContent = `Noch ${need} Shuriken bis zum ${nb.to}`;
+      $('#beltFill').style.width = (Math.max(0, Math.min(1, (stageProg(a) - b.min) / (nb.min - b.min))) * 100) + '%';
     } else {
-      $('#beltNext').textContent = 'Großmeister! Das ganze Einmaleins sitzt.';
+      $('#beltNext').textContent = st.doneText;
       $('#beltFill').style.width = '100%';
+    }
+    $$('[data-stage]').forEach(el => el.hidden = !unlocked(+el.dataset.stage));
+    $('#nest').hidden = !done[0];
+    if (done[0]){
+      $('#nestPic').innerHTML = dragonSVG(dragon);
+      $('#nestPic').style.setProperty('--w', [46,58,68,78,88,100][dragon] + '%');
+      [$('#nestTitle').textContent, $('#nestSub').textContent] = NEST[dragon];
     }
     $$('.tile').forEach(t => {
       const r = +t.dataset.r, s = starsFor(r);
@@ -879,23 +1230,50 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   $('#startBtn').addEventListener('click', startRound);
   $('#againBtn').addEventListener('click', startRound);
   $('#homeBtn').addEventListener('click', () => { renderDojo(); show('dojo'); });
-  $('#backBtn').addEventListener('click', () => { renderDojo(); if (checkMaster()) showMaster(); else show('dojo'); });
+  $('#backBtn').addEventListener('click', () => { clearTimeout(advanceTimer); renderDojo(); const f = checkFinish(); if (f >= 0) showFinale(f); else show('dojo'); });
 
   function renderReset(confirming){
     const row = $('#resetRow');
     row.innerHTML = confirming
-      ? '<span style="font-weight:700">Wirklich alle Shuriken und Gürtel löschen' + (master ? ', auch den goldenen' : '') + '?</span><button type="button" class="danger" id="resetYes">Ja, löschen</button><button type="button" id="resetNo">Abbrechen</button>'
+      ? '<span style="font-weight:700">Wirklich alle Shuriken und Gürtel löschen' + (done[0] ? ', auch den goldenen Gürtel' + (done[1] ? ', den Sensei-Titel' : '') + ' und den Drachen' : '') + '?</span><button type="button" class="danger" id="resetYes">Ja, löschen</button><button type="button" id="resetNo">Abbrechen</button>'
       : '<button type="button" id="resetAsk">Fortschritt zurücksetzen</button>';
     if (confirming){
-      $('#resetYes').addEventListener('click', () => { levels = {}; store.set('dojo.levels', levels); master = null; store.set('dojo.master', null); renderDojo(); renderReset(false); });
+      $('#resetYes').addEventListener('click', () => {
+        levels = {}; store.set('dojo.levels', levels);
+        done = STAGES.map(st => { store.set(st.key, null); return null; });
+        dragon = 0; store.set('dojo.dragon', 0);
+        selected = selected.filter(r => stageOf(r) === 0); if (!selected.length) selected = [2,5,10];
+        store.set('dojo.sel', selected);
+        renderDojo(); renderReset(false);
+      });
       $('#resetNo').addEventListener('click', () => renderReset(false));
     } else {
       $('#resetAsk').addEventListener('click', () => renderReset(true));
     }
   }
+  // Secret reward from the parents, shown only with the Sensei title. Never displayed here once saved.
+  function renderReward(editing){
+    const row = $('#rewardRow'), has = !!store.get('dojo.reward', '');
+    row.innerHTML = editing
+      ? '<input id="rewardIn" maxlength="80" placeholder="z. B. Ausflug in den Zoo" aria-label="Geheime Belohnung" autocomplete="off"><button type="button" id="rewardSave">Speichern</button><button type="button" id="rewardNo">Abbrechen</button>'
+      : `<p>${has ? 'Eine geheime Belohnung ist hinterlegt. Sie erscheint erst mit dem Sensei-Titel.' : 'Geheime Belohnung für den Sensei-Titel: noch keine eingetragen.'}</p><button type="button" id="rewardEdit">${has ? 'Ändern' : 'Belohnung eintragen'}</button>` + (has ? '<button type="button" id="rewardDel">Löschen</button>' : '');
+    if (editing){
+      const inp = $('#rewardIn'), save = () => { const v = inp.value.trim(); if (v) store.set('dojo.reward', v); renderReward(false); };
+      inp.focus();
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') save(); });
+      $('#rewardSave').addEventListener('click', save);
+      $('#rewardNo').addEventListener('click', () => renderReward(false));
+    } else {
+      $('#rewardEdit').addEventListener('click', () => renderReward(true));
+      if (has) $('#rewardDel').addEventListener('click', () => { store.set('dojo.reward', ''); renderReward(false); });
+    }
+  }
+
   renderReset(false);
+  renderReward(false);
   renderDojo();
-  if (checkMaster()) showMaster();
+  const finished = checkFinish();
+  if (finished >= 0) showFinale(finished);
 })();
 </script>
 

@@ -1,6 +1,6 @@
 // Offline support: app files network-first (so updates arrive), fonts cache-first.
 const PREFIX = 'dojo-';
-const CACHE = PREFIX + '1.2.5';
+const CACHE = PREFIX + '1.3.0';
 const APP = ['./', 'index.html', 'manifest.webmanifest', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
