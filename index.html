@@ -405,7 +405,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   let muted = !!store.get('dojo.muted', false);
   let master = store.get('dojo.master', null);   // {date, name}: set once all 30 shuriken are reached, never lost by mistakes
 
-  const VERSION = '1.2.5';
+  const VERSION = '1.2.6';
 
   // No zooming: iOS ignores user-scalable=no, so also block pinch gestures (double-tap zoom is off via touch-action).
   ['gesturestart','gesturechange','gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive:false }));
@@ -545,6 +545,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
 
   /* ---------- round ---------- */
   let round = null;
+  let advanceTimer = 0;   // pending move to the next question; cleared when the round is left or restarted
   const MSG = {
     intro: ['Welche Zahl trifft?','Ziel anvisieren …','Konzentrier dich, Ninja.','Du schaffst das.','Ruhig atmen. Dann werfen.'],
     ok: ['Treffer!','Volltreffer!','Lautlos und schnell!','Wie ein Schatten!','Genau ins Ziel!','Ninja-Blick!'],
@@ -591,6 +592,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   }
 
   function startRound(){
+    clearTimeout(advanceTimer);
     const total = totalStars();
     round = {
       queue: buildRound(), idx: 0, lit: 0, points: 0, comebacks: 0, clean: 0, repeats: 0,
@@ -659,10 +661,11 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
       if (it.base){
         const target = $('#lanterns').children[round.lit];
         round.lit++;
-        throwShuriken(target, () => { renderLanterns($('#lanterns'), round.lit, round.lit-1); sfx.hit(); });
+        const rd = round;
+        throwShuriken(target, () => { if (round !== rd) return; renderLanterns($('#lanterns'), round.lit, round.lit-1); sfx.hit(); });
       }
       const wait = first ? 1200 : 2000;
-      setTimeout(() => { round.idx++; nextQuestion(); }, reduce ? Math.min(wait, 1100) : wait);
+      advanceTimer = setTimeout(() => { round.idx++; nextQuestion(); }, reduce ? Math.min(wait, 1100) : wait);
     } else {
       it.tries++;
       btn.disabled = true; btn.classList.add('tried','wobble');
@@ -879,7 +882,7 @@ body.master .moon{box-shadow:0 0 60px rgba(255,216,74,.45)}
   $('#startBtn').addEventListener('click', startRound);
   $('#againBtn').addEventListener('click', startRound);
   $('#homeBtn').addEventListener('click', () => { renderDojo(); show('dojo'); });
-  $('#backBtn').addEventListener('click', () => { renderDojo(); if (checkMaster()) showMaster(); else show('dojo'); });
+  $('#backBtn').addEventListener('click', () => { clearTimeout(advanceTimer); renderDojo(); if (checkMaster()) showMaster(); else show('dojo'); });
 
   function renderReset(confirming){
     const row = $('#resetRow');
